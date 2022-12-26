@@ -1,13 +1,19 @@
+import { Global, Theme } from "@emotion/react";
 import { css } from "@emotion/react";
 
-const global = (theme: any) => css`
+import font from "styles/fonts";
+import {$COLOR_MAIN, $COLOR_MAIN_HOVER, $COLOR_WHITE} from "styles/variables";
+
+const global = (theme: Theme) => css`
   * {
     box-sizing: border-box
   }
+  
   html {
     font-size: 14px;
     font-weight: 500;
-    overflow-y: scroll
+    overflow-y: scroll;
+    height: 100%;
   }
   
   body, input, button, textarea, select {
@@ -18,11 +24,17 @@ const global = (theme: any) => css`
   body {
     margin: 0;
     padding: 0;
-    height: auto;
+    height: 100%;
     background-color: ${theme.mode.background};
     color: ${theme.mode.text};
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale
+  }
+  
+  #__next {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
   }
   
   html, h1, h2, h3, h4, h5, h6, form, fieldset, img, input, button, select {
@@ -55,13 +67,13 @@ const global = (theme: any) => css`
   
   button {
     border: 0;
-    color: ${theme.mode.buttonText};
-    background-color: ${theme.mode.buttonBg};
+    color: ${$COLOR_WHITE};
+    background-color: ${$COLOR_MAIN};
     cursor: pointer;
     
     &:hover {
-      color: ${theme.mode.buttonText};
-      background-color: ${theme.mode.buttonBgHover};
+      color: ${$COLOR_WHITE};
+      background-color: ${$COLOR_MAIN_HOVER};
     }
   }
   
@@ -100,5 +112,14 @@ const global = (theme: any) => css`
   }
 `;
 
-export default global;
+const GlobalStyle = () => {
+  return (
+    <>
+      <Global styles={font} />
+      <Global styles={global} />
+    </>
+  )
+}
+
+export default GlobalStyle;
 
