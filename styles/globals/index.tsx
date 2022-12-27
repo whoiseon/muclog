@@ -1,10 +1,11 @@
 import { Global, Theme } from "@emotion/react";
 import { css } from "@emotion/react";
 
-import font from "styles/fonts";
-import {$COLOR_MAIN, $COLOR_MAIN_HOVER, $COLOR_WHITE} from "styles/variables";
+import {$BORDER_RADIUS, $COLOR_MAIN, $COLOR_MAIN_CLICK, $COLOR_MAIN_HOVER, $COLOR_WHITE} from "styles/variables";
 
 const global = (theme: Theme) => css`
+  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+  
   * {
     box-sizing: border-box
   }
@@ -67,13 +68,19 @@ const global = (theme: Theme) => css`
   
   button {
     border: 0;
+    border-radius: ${$BORDER_RADIUS};
     color: ${$COLOR_WHITE};
     background-color: ${$COLOR_MAIN};
     cursor: pointer;
+    transition: all .16s ease;
     
     &:hover {
       color: ${$COLOR_WHITE};
       background-color: ${$COLOR_MAIN_HOVER};
+    }
+    
+    &:active {
+      background-color: ${$COLOR_MAIN_CLICK};
     }
   }
   
@@ -106,16 +113,28 @@ const global = (theme: Theme) => css`
     -webkit-box-shadow:0 0 0px 1000px #ffffff75 inset;
   }
   
+  input {
+    background-color: ${theme.mode.inputBackground};
+    color: ${theme.mode.inputColor};
+    border-radius: ${$BORDER_RADIUS};
+  }
+  
+  input::placeholder {
+    color: ${theme.mode.inputPlaceHolderColor};
+  }
+  
   input, select, textarea {
-    background: #fff;
-    color: #222;
+    border: none;
+  }
+  
+  input:focus {
+    outline: none;
   }
 `;
 
 const GlobalStyle = () => {
   return (
     <>
-      <Global styles={font} />
       <Global styles={global} />
     </>
   )
