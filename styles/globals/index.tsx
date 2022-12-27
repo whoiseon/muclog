@@ -66,11 +66,37 @@ const global = (theme: Theme) => css`
     overflow: hidden;
   }
   
+  button[name="icon"] {
+    background-color: inherit;
+
+    &:hover {
+      background-color: inherit;
+    }
+
+    &:active {
+      background-color: inherit;
+    }
+  } 
+  
+  button[name="github"], button[name="google"] {
+    background-color: ${theme.mode.whiteButtonBackground};
+    border: ${theme.mode.whiteButtonBorder};
+    
+    &:hover {
+      background-color: ${theme.mode.whiteButtonHover};
+    }
+    
+    &:active {
+      background-color: ${theme.mode.whiteButtonBackground}
+    }
+  }
+  
   button {
     border: 0;
     border-radius: ${$BORDER_RADIUS};
     color: ${$COLOR_WHITE};
     background-color: ${$COLOR_MAIN};
+    font-weight: bold;
     cursor: pointer;
     transition: all .16s ease;
     
@@ -95,18 +121,8 @@ const global = (theme: Theme) => css`
   }
   
   a, a:link {
-    color: #000;
+    color: ${theme.mode.text};
     text-decoration: none
-  }
-  
-  a:hover {
-    text-decoration: underline;
-    color: #4d0585
-  }
-  
-  a:focus, a:active {
-    color:#000;
-    text-decoration:none
   }
   
   input:-webkit-autofill {
@@ -129,6 +145,10 @@ const global = (theme: Theme) => css`
   
   input:focus {
     outline: none;
+  }
+  
+  header[data-layout="global-header"] {
+    background-color: ${theme.mode.headerBackground}
   }
 `;
 

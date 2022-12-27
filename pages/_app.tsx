@@ -3,14 +3,19 @@ import GlobalStyle from "styles/globals";
 import {ThemeProvider} from "@emotion/react";
 import {useEffect, useState} from "react";
 import {darkTheme, lightTheme} from "styles/theme";
+import {Provider} from "react-redux";
+import store from "store";
 
+import { useMediaQuery } from "react-responsive";
 import {onAuthStateChanged} from "@firebase/auth";
 import {auth} from "lib/firebase";
 
-import { useMediaQuery } from "react-responsive";
+import Loading from "components/common/Loading";
+import MobileLayout from "components/mobile/Layout";
+import PCLayout from "components/pc/Layout";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const isMobile = useMediaQuery({ maxWidth: 768})
+  const isMobile = useMediaQuery({ maxWidth: 768 })
 
   const [isDark, setIsDark] = useState(true);
   const [init, setInit] = useState(false);
@@ -29,22 +34,38 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <GlobalStyle />
-        {
-          init
-            ? (
-                <Component
-                  {...pageProps}
-                  isDark={isDark}
-                  setIsDark={setIsDark}
-                  isLoggedIn={isLoggedIn}
-                  isMobile={isMobile}
-                />
-            )
-            : "Initializing"
-        }
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+          <GlobalStyle />
+          {
+            init
+              ? isMobile
+                ? (
+                  <MobileLayout isLoggedIn={isLoggedIn}>
+                    <Component
+                      {...pageProps}
+                      isDark={isDark}
+                      setIsDark={setIsDark}
+                      isLoggedIn={isLoggedIn}
+                      isMobile={isMobile}
+                    />
+                  </MobileLayout>
+                )
+                : (
+                  <PCLayout isLoggedIn={isLoggedIn}>
+                    <Component
+                      {...pageProps}
+                      isDark={isDark}
+                      setIsDark={setIsDark}
+                      isLoggedIn={isLoggedIn}
+                      isMobile={isMobile}
+                    />
+                  </PCLayout>
+                )
+              : <Loading />
+          }
+        </ThemeProvider>
+      </Provider>
     </>
   )
 }

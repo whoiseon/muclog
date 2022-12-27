@@ -1,6 +1,6 @@
-import {auth} from "lib/firebase";
-import {signOut} from "@firebase/auth";
 import {useRouter} from "next/router";
+import {signOut} from "@firebase/auth";
+import {auth} from "lib/firebase";
 
 export default function Root() {
   const router = useRouter();
@@ -17,4 +17,4 @@ export default function Root() {
       </div>
     </div>
   )
-}
+};

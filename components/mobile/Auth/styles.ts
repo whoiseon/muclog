@@ -1,28 +1,26 @@
 import styled from "@emotion/styled";
+
 import {
   $BACKGROUND_COLOR_LIGHT_BLACK,
-  $BACKGROUND_COLOR_LIGHT_BLACK_HOVER,
+  $BACKGROUND_COLOR_LIGHT_BLACK_HOVER, $BACKGROUND_COLOR_MEDIUM_BLACK,
   $BORDER_RADIUS,
-  $COLOR_GRAY,
-  $COLOR_PINK
+  $COLOR_GRAY, $COLOR_MAIN,
+  $COLOR_PINK, $COLOR_RED
 } from "styles/variables";
 
 export const Background = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
 `;
 
 export const Wrapper = styled.div`
-  width: 440px;
+  width: 100%;
   height: 100%;
+  padding: 20px;
   margin-top: 60px;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-  }
   
   form {
     display: flex;
@@ -32,7 +30,7 @@ export const Wrapper = styled.div`
       width: 100%;
     }
     
-    p {
+    & > p {
       font-weight: bold;
       color: ${$COLOR_GRAY};
       margin-bottom: 10px;
@@ -87,19 +85,18 @@ export const SocialLogin = styled.div`
     }
     
     button {
-      background-color: ${$BACKGROUND_COLOR_LIGHT_BLACK};
       width: 100%;
       height: 42px;
-      
-      &:hover {
-        background-color: ${$BACKGROUND_COLOR_LIGHT_BLACK_HOVER};
-      }
-      
-      &:active {
-        background-color: ${$BACKGROUND_COLOR_LIGHT_BLACK};
-      }
     }
   }
+`;
+
+export const SocialIcon = styled.div`
+  margin-bottom: 0;
+`;
+
+export const ErrorMessage = styled.span`
+  color: ${$COLOR_RED};
 `;
 
 export const ToggleAccount = styled.div`
@@ -111,6 +108,6 @@ export const ToggleAccount = styled.div`
     margin-left: 6px;
     cursor: pointer;
     text-decoration: underline;
-    color: ${$COLOR_PINK};
+    color: ${$COLOR_MAIN};
   }
 `;

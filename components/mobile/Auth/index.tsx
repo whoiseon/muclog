@@ -1,4 +1,4 @@
-import {FormEvent, MouseEvent, useCallback, useState} from "react";
+import {FormEvent, MouseEvent, useCallback, useEffect, useState} from "react";
 import useInput from "hooks/useInput";
 
 import { auth } from "lib/firebase";
@@ -7,7 +7,16 @@ import {
   signInWithEmailAndPassword, signInWithPopup, updateProfile
 } from "@firebase/auth";
 
-import {Background, SocialLogin, ToggleAccount, Welcome, Wrapper} from "components/Auth/styles";
+import {
+  Background,
+  ErrorMessage,
+  SocialIcon,
+  SocialLogin,
+  ToggleAccount,
+  Welcome,
+  Wrapper
+} from "components/mobile/Auth/styles";
+import Image from "next/image";
 
 export default function Auth() {
   const [newAccount, setNewAccount] = useState(false);
@@ -24,19 +33,32 @@ export default function Auth() {
 
       if (newAccount) {
         data = await createUserWithEmailAndPassword(auth, email, password);
-        // await updateProfile(data, {
-        //   displayName: name
-        // })
+        await updateProfile(data.user, {
+          displayName: name
+        })
       } else {
         data = await signInWithEmailAndPassword(auth, email, password);
       }
       console.log(data);
     } catch (error: any) {
-      console.log(error.code);
+      setError(error.code);
     }
   }, [newAccount, email, password]);
 
   const toggleAccount = () => setNewAccount((prev) => !prev);
+
+  const handleErrorTranslate = (error: string) => {
+    switch (error) {
+      case 'auth/user-not-found':
+        return '아이디와 비밀번호를 다시 확인해주세요.';
+      case 'auth/wrong-password':
+        return '비밀번호를 다시 확인해주세요.';
+      case 'auth/invalid-email':
+        return '이메일 형식에 맞지 않습니다.';
+      default:
+        return error;
+    }
+  }
 
   const onSocialClick = useCallback(async (event: any) => {
     const { target: { name } } = event;
@@ -50,6 +72,12 @@ export default function Auth() {
 
     await signInWithPopup(auth, provider)
   }, []);
+
+  useEffect(() => {
+    setError("");
+    setEmail("");
+    setPassword("");
+  }, [newAccount])
 
   return (
     <Background>
@@ -70,27 +98,45 @@ export default function Auth() {
             }
           </p>
         </Welcome>
-        <SocialLogin>
-          <p>
-            SNS 로그인
-          </p>
-          <div>
-            <button
-              type="button"
-              name="google"
-              onClick={onSocialClick}
-            >
-              구글 계정으로 로그인
-            </button>
-            <button
-              type="button"
-              name="github"
-              onClick={onSocialClick}
-            >
-              깃허브 계정으로 로그인
-            </button>
-          </div>
-        </SocialLogin>
+        {
+          !newAccount && (
+            <SocialLogin>
+              <p>
+                SNS 로그인
+              </p>
+              <div>
+                <button
+                  type="button"
+                  name="google"
+                  onClick={onSocialClick}
+                >
+                  <SocialIcon>
+                    <Image
+                      src="/image/icon/dark/google-sns-dark-icon.svg"
+                      alt="Google login"
+                      width={22}
+                      height={22}
+                    />
+                  </SocialIcon>
+                </button>
+                <button
+                  type="button"
+                  name="github"
+                  onClick={onSocialClick}
+                >
+                  <SocialIcon>
+                    <Image
+                      src="/image/icon/dark/github-sns-dark-icon.svg"
+                      alt="Github login"
+                      width={22}
+                      height={22}
+                    />
+                  </SocialIcon>
+                </button>
+              </div>
+            </SocialLogin>
+          )
+        }
         <form onSubmit={onSubmit}>
           <p>
             {
@@ -122,6 +168,7 @@ export default function Auth() {
             value={password}
             onChange={onChangePassword}
           />
+          {error && <ErrorMessage>{handleErrorTranslate(error)}</ErrorMessage>}
           <button type="submit">
             {
               newAccount
@@ -129,7 +176,6 @@ export default function Auth() {
                 : "로그인"
             }
           </button>
-          { error }
           <ToggleAccount>
             {
               newAccount
