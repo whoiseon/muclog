@@ -129,10 +129,11 @@ const global = (theme: Theme) => css`
     -webkit-box-shadow:0 0 0px 1000px #ffffff75 inset;
   }
   
-  input {
+  input, textarea {
     background-color: ${theme.mode.inputBackground};
     color: ${theme.mode.inputColor};
     border-radius: ${$BORDER_RADIUS};
+    font-weight: 500;
   }
   
   input::placeholder {
@@ -143,12 +144,31 @@ const global = (theme: Theme) => css`
     border: none;
   }
   
-  input:focus {
+  input:focus, textarea:focus {
     outline: none;
   }
   
+  textarea {
+    resize: none;
+    border-bottom: ${theme.mode.mobileMenuHeaderBorder};
+  }
+  
   header[data-layout="global-header"] {
-    background-color: ${theme.mode.headerBackground}
+    background-color: ${theme.mode.headerBackground};
+    border-bottom: ${theme.mode.headerBorder}
+  }
+  
+  div[data-layout="mobile-menu"] {
+    background-color: ${theme.mode.mobileMenuBackground};
+  }
+  
+  h1[data-layout="mobile-menu-header"] {
+    background-color: ${theme.mode.mobileMenuHeaderBackground};
+    border-bottom: ${theme.mode.mobileMenuHeaderBorder};
+  }
+  
+  ul[data-layout="mobile-menu-ul"] {
+    background-color: ${theme.mode.mobileMenuUlBackground};
   }
 `;
 

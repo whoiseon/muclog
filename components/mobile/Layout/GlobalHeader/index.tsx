@@ -2,13 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 
 import {Header, Icon, Logo, Menu, Search} from "components/mobile/Layout/GlobalHeader/styles";
-import {Dispatch, SetStateAction, useCallback} from "react";
+import {Dispatch, SetStateAction, useCallback, useEffect} from "react";
+import {useRouter} from "next/router";
 
 interface GlobalHeaderProps {
   setMenuActive: Dispatch<SetStateAction<boolean>>
 }
 
 export default function GlobalHeader({ setMenuActive }: GlobalHeaderProps) {
+  const router = useRouter();
+
   const handleShowMenu = useCallback(() => {
     setMenuActive((prev) => !prev)
   }, []);

@@ -2,17 +2,26 @@ import Link from "next/link";
 import {useRouter} from "next/router";
 import {Dispatch, SetStateAction, useCallback} from "react";
 
-import {ArrowIcon, CloseButton, Icon, MyName, Wrapper} from "components/mobile/Layout/Menus/styles";
+import {
+  ArrowIcon,
+  CloseButton, DarkModeToggle,
+  Icon,
+  MyName,
+  Wrapper
+} from "components/mobile/Layout/Menus/styles";
 import Image from "next/image";
 
-import {signOut} from "@firebase/auth";
+import {signOut, User} from "@firebase/auth";
 import {auth} from "lib/firebase";
 
 interface MenusProps {
-  setMenuActive: Dispatch<SetStateAction<boolean>>
+  setMenuActive: Dispatch<SetStateAction<boolean>>,
+  isDark: boolean,
+  setIsDark: Dispatch<SetStateAction<boolean>>,
+  userInfo: User | null
 }
 
-export default function Menus({ setMenuActive }: MenusProps) {
+export default function Menus({ setMenuActive, isDark, setIsDark, userInfo }: MenusProps) {
   const router = useRouter();
 
   const handleCloseMenu = useCallback(() => {
@@ -25,10 +34,19 @@ export default function Menus({ setMenuActive }: MenusProps) {
     setMenuActive(false);
   }, []);
 
+  const handleDarkModeToggle = useCallback(() => {
+    setIsDark((prev) => !prev);
+  }, []);
+
+  const onClickMovePage = useCallback(() => {
+    setMenuActive(false);
+  }, []);
+
   return (
     <Wrapper>
-      <MyName>
-        Profile
+      <MyName data-layout="mobile-menu-header">
+        <span>{ userInfo?.displayName }</span>
+        <span>{ userInfo?.email }</span>
       </MyName>
       <CloseButton onClick={handleCloseMenu}>
         <Image
@@ -38,9 +56,34 @@ export default function Menus({ setMenuActive }: MenusProps) {
           height={18}
         />
       </CloseButton>
-      <ul>
+      <ul data-layout="mobile-menu-ul">
         <li>
-          <Link href="/profile">
+          <Link href="/" onClick={onClickMovePage}>
+            <div>
+              <Icon>
+                <Image
+                  src="/image/icon/home-icon.svg"
+                  alt="Home"
+                  width={18}
+                  height={18}
+                />
+              </Icon>
+              <span>홈</span>
+            </div>
+            <ArrowIcon>
+              <Image
+                src="/image/icon/menu-arrow-icon.svg"
+                alt="Menu Arrow"
+                width={18}
+                height={12}
+              />
+            </ArrowIcon>
+          </Link>
+        </li>
+      </ul>
+      <ul data-layout="mobile-menu-ul">
+        <li>
+          <Link href="/profile" onClick={onClickMovePage}>
             <div>
               <Icon>
                 <Image
@@ -63,7 +106,7 @@ export default function Menus({ setMenuActive }: MenusProps) {
           </Link>
         </li>
         <li>
-          <Link href="/profile">
+          <Link href="/profile" onClick={onClickMovePage}>
             <div>
               <Icon>
                 <Image
@@ -86,13 +129,36 @@ export default function Menus({ setMenuActive }: MenusProps) {
           </Link>
         </li>
       </ul>
-      <ul>
+      <ul data-layout="mobile-menu-ul">
         <li>
           <button onClick={onLogOutClick}>
             로그아웃
           </button>
         </li>
       </ul>
+      <DarkModeToggle>
+        <button onClick={handleDarkModeToggle}>
+          {
+            isDark
+              ? (
+                <Image
+                  src="/image/icon/dark/light-mode-icon.svg"
+                  alt="Light mode"
+                  width={24}
+                  height={24}
+                />
+              )
+              : (
+                <Image
+                  src="/image/icon/light/dark-mode-icon.svg"
+                  alt="Dark mode"
+                  width={24}
+                  height={24}
+                />
+              )
+          }
+        </button>
+      </DarkModeToggle>
     </Wrapper>
   );
 };

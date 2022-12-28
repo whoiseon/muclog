@@ -1,8 +1,13 @@
 import {useRouter} from "next/router";
-import {signOut} from "@firebase/auth";
+import {signOut, User} from "@firebase/auth";
 import {auth} from "lib/firebase";
 
-export default function Root() {
+interface RootProps {
+  userInfo: User | null
+}
+
+
+export default function Root({ userInfo }: RootProps) {
   const router = useRouter();
 
   const onLogOutClick = async () => {

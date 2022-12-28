@@ -10,13 +10,12 @@ export const Wrapper = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    background-color: ${$BACKGROUND_COLOR_BLACK};
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     opacity: 60%;
     
-    li:first-child {
+    li:first-of-type {
       a {
         border: none;
       }
@@ -68,8 +67,13 @@ export const MyName = styled.h1`
   width: 100%;
   height: 60px;
   font-size: 16px;
-  background-color: ${$BACKGROUND_COLOR_EXTRA_BLACK};
   margin-bottom: 20px;
+  
+  span:nth-of-type(2) {
+    margin-left: 6px;
+    font-size: 14px;
+    opacity: 0.5;
+  }
 `;
 
 export const CloseButton = styled.div`
@@ -92,4 +96,21 @@ export const Icon = styled.div`
 
 export const ArrowIcon = styled.div`
   margin-left: auto;
+`;
+
+export const DarkModeToggle = styled.div`
+  margin-top: 40px;
+  padding: 0 20px;
+  text-align: center;
+  opacity: 80%;
+  
+  button {
+    background: none;
+    color: inherit;
+    padding: 16px;
+  }
+  
+  &:hover {
+    opacity: 100%;
+  }
 `;

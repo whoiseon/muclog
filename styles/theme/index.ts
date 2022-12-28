@@ -21,9 +21,14 @@ export const lightTheme: Theme = {
     boxBackground: $BACKGROUND_COLOR_LIGHT_BLACK,
     inputPlaceHolderColor: $COLOR_GRAY,
     whiteButtonBackground: $BACKGROUND_COLOR_EXTRA_WHITE,
-    whiteButtonBorder: `solid 1px rgba(0, 0, 0, 0.08)`,
+    whiteButtonBorder: `solid 1px rgba(0, 0, 0, 0.06)`,
     whiteButtonHover: $BACKGROUND_COLOR_WHITE,
-    headerBackground: $BACKGROUND_COLOR_MEDIUM_WHITE,
+    headerBackground: $BACKGROUND_COLOR_EXTRA_WHITE,
+    headerBorder: `solid 1px rgba(0, 0, 0, 0.06)`,
+    mobileMenuBackground: $BACKGROUND_COLOR_EXTRA_WHITE,
+    mobileMenuHeaderBackground: $BACKGROUND_COLOR_WHITE,
+    mobileMenuHeaderBorder: `solid 1px rgba(0, 0, 0, 0.06)`,
+    mobileMenuUlBackground: $BACKGROUND_COLOR_WHITE,
   },
 };
 
@@ -39,5 +44,10 @@ export const darkTheme: Theme = {
     whiteButtonBorder: "none",
     whiteButtonHover: $BACKGROUND_COLOR_LIGHT_BLACK_HOVER,
     headerBackground: $BACKGROUND_COLOR_BLACK,
+    headerBorder: `none`,
+    mobileMenuBackground: $BACKGROUND_COLOR_MEDIUM_BLACK,
+    mobileMenuHeaderBackground: $BACKGROUND_COLOR_EXTRA_BLACK,
+    mobileMenuHeaderBorder: `none`,
+    mobileMenuUlBackground: $BACKGROUND_COLOR_BLACK,
   },
 };

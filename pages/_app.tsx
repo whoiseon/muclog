@@ -7,7 +7,7 @@ import {Provider} from "react-redux";
 import store from "store";
 
 import { useMediaQuery } from "react-responsive";
-import {onAuthStateChanged} from "@firebase/auth";
+import {onAuthStateChanged, User} from "@firebase/auth";
 import {auth} from "lib/firebase";
 
 import Loading from "components/common/Loading";
@@ -20,11 +20,13 @@ export default function App({ Component, pageProps }: AppProps) {
   const [isDark, setIsDark] = useState(true);
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState<User | null>(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsLoggedIn(true);
+        setUserInfo(user);
       } else {
         setIsLoggedIn(false);
       }
@@ -41,18 +43,27 @@ export default function App({ Component, pageProps }: AppProps) {
             init
               ? isMobile
                 ? (
-                  <MobileLayout isLoggedIn={isLoggedIn}>
+                  <MobileLayout
+                    isLoggedIn={isLoggedIn}
+                    setIsDark={setIsDark}
+                    isDark={isDark}
+                    userInfo={userInfo}
+                  >
                     <Component
                       {...pageProps}
                       isDark={isDark}
                       setIsDark={setIsDark}
                       isLoggedIn={isLoggedIn}
                       isMobile={isMobile}
+                      userInfo={userInfo}
                     />
                   </MobileLayout>
                 )
                 : (
-                  <PCLayout isLoggedIn={isLoggedIn}>
+                  <PCLayout
+                    isLoggedIn={isLoggedIn}
+                    userInfo={userInfo}
+                  >
                     <Component
                       {...pageProps}
                       isDark={isDark}

@@ -1,14 +1,20 @@
-import {auth} from "lib/firebase";
-import {signOut} from "@firebase/auth";
 import {useRouter} from "next/router";
-import {Wrapper} from "components/mobile/Root/styles";
 
-export default function Root() {
+import {User} from "@firebase/auth";
+
+import {Wrapper} from "components/mobile/Root/styles";
+import WriteForm from "components/mobile/WriteForm";
+
+interface RootProps {
+  userInfo: User | null
+}
+
+export default function Root({ userInfo }: RootProps) {
   const router = useRouter();
 
   return (
     <Wrapper>
-      Hello, Muclog
+      <WriteForm userInfo={userInfo} />
     </Wrapper>
   )
 }

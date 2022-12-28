@@ -18,7 +18,7 @@ export const Search = styled.div`
   button {
     width: 60px;
     height: 100%;
-    opacity: 30%;
+    opacity: 50%;
 
     &:hover {
       opacity: 100%;
@@ -43,7 +43,7 @@ export const Menu = styled.div`
   button {
     width: 60px;
     height: 100%;
-    opacity: 30%;
+    opacity: 50%;
     
     &:hover {
       opacity: 100%;

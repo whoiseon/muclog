@@ -1,30 +1,27 @@
-import {Dispatch, SetStateAction, useCallback} from "react";
+import {useCallback} from "react";
 import Head from 'next/head';
 
-import {User} from "@firebase/auth";
-
-import MobileRoot from "components/mobile/Root";
+import MobileProfile from "components/mobile/Profile";
 import MobileAuth from "components/mobile/Auth";
-import PCRoot from "components/pc/Root";
+import PCProfile from "components/pc/Profile";
 import PCAuth from "components/pc/Auth";
 
 interface HomeProps {
   isLoggedIn: boolean,
   isMobile: boolean,
-  userInfo: User | null
 }
 
-export default function Home({ isLoggedIn, isMobile, userInfo }: HomeProps) {
+export default function Home({ isLoggedIn, isMobile }: HomeProps) {
   const handleMobileDetect = useCallback(() => {
     if (isMobile) {
       if (isLoggedIn) {
-        return <MobileRoot userInfo={userInfo} />
+        return <MobileProfile />
       } else {
         return <MobileAuth />
       }
     } else {
       if (isLoggedIn) {
-        return <PCRoot userInfo={userInfo} />
+        return <PCProfile />
       } else {
         return <PCAuth />
       }
