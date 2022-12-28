@@ -3,22 +3,22 @@ import Image from "next/image";
 
 import { db } from "lib/firebase";
 import {collection, addDoc, query, doc, onSnapshot, DocumentData, orderBy} from "@firebase/firestore";
-import Parser from "html-react-parser";
+import TextareaAutosize, { TextareaAutosizeProps } from "react-textarea-autosize";
 
-import useInput from "hooks/useInput";
-import {Editor, Form} from "components/mobile/WriteForm/styles";
-import LogList from "components/mobile/LogList";
+import {Editor, FocusUnderline, Form, LogList, Textarea, TextareaTools} from "components/mobile/WriteForm/styles";
 import {User} from "@firebase/auth";
+import Log from "components/mobile/Log";
 
 interface WriteFormProps {
   userInfo: User | null
 }
 
 export default function WriteForm({ userInfo }: WriteFormProps) {
-  const contentRef = useRef<any>();
+  const contentRef = useRef<any>(null);
 
   const [content, setContent] = useState("");
   const [logs, setLogs] = useState<DocumentData[]>([]);
+  const [isWriting, setIsWriting] = useState(false);
 
   useEffect(() => {
     const q = query(collection(db, "logs"), orderBy("createdAt", "desc"))
@@ -34,7 +34,14 @@ export default function WriteForm({ userInfo }: WriteFormProps) {
 
   const onChangeContent = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => {
     setContent(event.target.value);
-    handleResizeHeight();
+  }, []);
+
+  const onFocusTextarea = useCallback(() => {
+    setIsWriting(true);
+  }, []);
+
+  const onBlurTextarea = useCallback(() => {
+    setIsWriting(false);
   }, []);
 
   const contentsReplaceNewline = useCallback(() => {
@@ -50,6 +57,7 @@ export default function WriteForm({ userInfo }: WriteFormProps) {
         createdAt: Date.now(),
         creatorName: userInfo?.displayName,
         creatorId: userInfo?.uid,
+        creatorProfile: userInfo?.photoURL
       });
 
       setContent("");
@@ -61,26 +69,54 @@ export default function WriteForm({ userInfo }: WriteFormProps) {
   return (
     <Form onSubmit={onSubmit}>
       <Editor>
-        <textarea
-          ref={contentRef}
-          placeholder="지금 무슨 생각을 하고 계신가요?..."
-          maxLength={120}
-          value={content}
-          onChange={onChangeContent}
-          rows={1}
-        />
-        <button type="submit">
-          <div>
-            <Image
-              src="/image/icon/send-icon.svg"
-              alt="Send"
-              width={18}
-              height={18}
-            />
-          </div>
-        </button>
+        <Textarea focus={isWriting}>
+          <TextareaAutosize
+            ref={contentRef}
+            placeholder="지금 무슨 생각을 하고 계신가요?..."
+            maxLength={120}
+            value={content}
+            onChange={onChangeContent}
+            onFocus={onFocusTextarea}
+            onBlur={onBlurTextarea}
+            rows={1}
+            required
+          />
+        </Textarea>
+        <TextareaTools>
+          <button type="button">
+            <div>
+              <Image
+                src="/image/icon/picture-icon.svg"
+                alt="Picture"
+                width={18}
+                height={18}
+              />
+            </div>
+          </button>
+          <button type="submit">
+            <div>
+              <Image
+                src="/image/icon/send-icon.svg"
+                alt="Send"
+                width={18}
+                height={18}
+              />
+            </div>
+          </button>
+        </TextareaTools>
+        {isWriting && <FocusUnderline/>}
       </Editor>
-      <LogList data={logs} />
+      <LogList>
+        {
+          logs.map((log) => {
+            return <Log
+              key={log.id}
+              data={log}
+              isOwner={log.creatorId === userInfo?.uid}
+            />
+          })
+        }
+      </LogList>
     </Form>
   )
 }

@@ -5,30 +5,38 @@ import {
   $BACKGROUND_COLOR_EXTRA_WHITE,
   $BACKGROUND_COLOR_LIGHT_BLACK,
   $BACKGROUND_COLOR_LIGHT_BLACK_HOVER,
-  $BACKGROUND_COLOR_MEDIUM_BLACK, $BACKGROUND_COLOR_MEDIUM_WHITE,
+  $BACKGROUND_COLOR_MEDIUM_BLACK,
+  $BACKGROUND_COLOR_MEDIUM_WHITE,
+  $BACKGROUND_COLOR_SEMI_BLACK,
+  $BACKGROUND_COLOR_SEMI_WHITE,
   $BACKGROUND_COLOR_WHITE,
   $COLOR_BLACK,
-  $COLOR_GRAY, $COLOR_MAIN,
+  $COLOR_GRAY,
+  $COLOR_MAIN,
   $COLOR_WHITE
 } from "styles/variables";
 
 export const lightTheme: Theme = {
   mode: {
     text: $COLOR_BLACK,
-    background: $BACKGROUND_COLOR_EXTRA_WHITE,
-    inputBackground: $BACKGROUND_COLOR_WHITE,
+    background: $BACKGROUND_COLOR_WHITE,
+    inputBackground: $BACKGROUND_COLOR_EXTRA_WHITE,
     inputColor: $BACKGROUND_COLOR_EXTRA_BLACK,
     boxBackground: $BACKGROUND_COLOR_LIGHT_BLACK,
     inputPlaceHolderColor: $COLOR_GRAY,
     whiteButtonBackground: $BACKGROUND_COLOR_EXTRA_WHITE,
-    whiteButtonBorder: `solid 1px rgba(0, 0, 0, 0.06)`,
+    whiteButtonBorder: `1px solid rgba(0, 0, 0, 0.06)`,
     whiteButtonHover: $BACKGROUND_COLOR_WHITE,
     headerBackground: $BACKGROUND_COLOR_EXTRA_WHITE,
-    headerBorder: `solid 1px rgba(0, 0, 0, 0.06)`,
+    headerBorder: `1px solid rgba(0, 0, 0, 0.06)`,
     mobileMenuBackground: $BACKGROUND_COLOR_EXTRA_WHITE,
     mobileMenuHeaderBackground: $BACKGROUND_COLOR_WHITE,
-    mobileMenuHeaderBorder: `solid 1px rgba(0, 0, 0, 0.06)`,
+    mobileMenuHeaderBorder: `1px solid rgba(0, 0, 0, 0.06)`,
     mobileMenuUlBackground: $BACKGROUND_COLOR_WHITE,
+    cardBackground: $BACKGROUND_COLOR_EXTRA_WHITE,
+    cardBorder: '1px solid rgba(0, 0, 0, 0.06)',
+    smallModalBackground: $BACKGROUND_COLOR_SEMI_WHITE,
+    smallModalColor: $COLOR_BLACK
   },
 };
 
@@ -49,5 +57,9 @@ export const darkTheme: Theme = {
     mobileMenuHeaderBackground: $BACKGROUND_COLOR_EXTRA_BLACK,
     mobileMenuHeaderBorder: `none`,
     mobileMenuUlBackground: $BACKGROUND_COLOR_BLACK,
+    cardBackground: $BACKGROUND_COLOR_SEMI_BLACK,
+    cardBorder: '1px solid rgba(0, 0, 0, 0.1)',
+    smallModalBackground: $BACKGROUND_COLOR_EXTRA_BLACK,
+    smallModalColor: $COLOR_WHITE
   },
 };

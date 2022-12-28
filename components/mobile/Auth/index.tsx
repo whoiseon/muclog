@@ -39,7 +39,6 @@ export default function Auth() {
       } else {
         data = await signInWithEmailAndPassword(auth, email, password);
       }
-      console.log(data);
     } catch (error: any) {
       setError(error.code);
     }

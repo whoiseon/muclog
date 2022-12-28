@@ -170,6 +170,27 @@ const global = (theme: Theme) => css`
   ul[data-layout="mobile-menu-ul"] {
     background-color: ${theme.mode.mobileMenuUlBackground};
   }
+  
+  div[data-layout="logs"] {
+    background-color: ${theme.mode.cardBackground};
+    border-top: ${theme.mode.cardBorder};
+    border-bottom: ${theme.mode.cardBorder};
+  }
+  
+  div[data-layout="smallModal"] {
+    background-color: ${theme.mode.smallModalBackground};
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    
+    ul {
+      li {
+        button {
+          span {
+            color: ${theme.mode.smallModalColor}
+          }
+        }
+      }
+    }
+  }
 `;
 
 const GlobalStyle = () => {
