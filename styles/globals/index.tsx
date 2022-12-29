@@ -107,14 +107,14 @@ const global = (theme: Theme) => css`
   button[data-button="border"] {
     border: ${theme.mode.globalModalButtonBorder};
     border-radius: ${$BORDER_RADIUS};
-    color: ${$COLOR_WHITE};
+    color: ${theme.mode.globalModalColor};
     background: none;
     font-weight: bold;
     cursor: pointer;
     transition: all .16s ease;
     
     &:hover {
-      color: ${$COLOR_WHITE};
+      color: ${theme.mode.globalModalColor};
       background-color: ${theme.mode.globalModalButtonHover};
     }
     
@@ -171,7 +171,7 @@ const global = (theme: Theme) => css`
   }
   
   input:-webkit-autofill {
-    -webkit-box-shadow:0 0 0px 1000px #ffffff75 inset;
+    -webkit-box-shadow:0 0 0 1000px #ffffff75 inset;
   }
   
   input, textarea {
@@ -196,6 +196,11 @@ const global = (theme: Theme) => css`
   textarea {
     resize: none;
     border-bottom: ${theme.mode.mobileMenuHeaderBorder};
+  }
+  
+  textarea[data-layout="editTextarea"] {
+    background-color: ${theme.mode.editTextareaBackground};
+    border: none;
   }
   
   header[data-layout="global-header"] {

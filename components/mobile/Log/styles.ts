@@ -49,9 +49,36 @@ export const MoreButton = styled.div`
     background: none;
     padding: 16px 22px;
     opacity: 0.3;
+    transform: rotate(90deg);
     
     &:hover {
       opacity: 1;
+    }
+  }
+`;
+
+export const EditForm = styled.form`
+  padding: 20px;
+
+  textarea {
+    width: 100%;
+    padding: 20px;
+    height: auto;
+    border-radius: 4px;
+    line-height: 20px;
+  }
+  
+  & > div {
+    margin-top: 10px;
+    display: flex;
+    
+    button {
+      width: 100%;
+      padding: 12px 0;
+    }
+
+    button:first-of-type {
+      margin-right: 10px;
     }
   }
 `;

@@ -3,21 +3,21 @@ import {Dispatch, SetStateAction, useCallback, MouseEvent, useRef} from "react";
 
 interface GlobalModalProps {
   onClick: () => void,
-  setDeleteModal: Dispatch<SetStateAction<boolean>>,
+  setModal: Dispatch<SetStateAction<boolean>>,
   title: string,
   text: string,
   buttonText: string,
 }
 
-export default function GlobalConfirmModal({ onClick, setDeleteModal, title, text, buttonText }: GlobalModalProps) {
+export default function GlobalConfirmModal({ onClick, setModal, title, text, buttonText }: GlobalModalProps) {
   const onClickBackground = useCallback((e: MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      setDeleteModal(false);
+      setModal(false);
     }
   }, []);
 
   const onClickCloseModal = useCallback(() => {
-    setDeleteModal(false);
+    setModal(false);
   }, []);
 
   return (
@@ -37,8 +37,9 @@ export default function GlobalConfirmModal({ onClick, setDeleteModal, title, tex
           <button
             type="button"
             data-button="red"
+            onClick={onClick}
           >
-            삭제
+            { buttonText }
           </button>
           <button
             type="button"

@@ -16,7 +16,6 @@ interface RootProps {
 
 export default function Root({ userInfo }: RootProps) {
   const [logs, setLogs] = useState<DocumentData[]>([]);
-  const [deleteModal, setDeleteModal] = useState(false);
 
   useEffect(() => {
     const q = query(collection(db, "logs"), orderBy("createdAt", "desc"))
@@ -30,11 +29,6 @@ export default function Root({ userInfo }: RootProps) {
     })
   }, []);
 
-
-  const onDeleteClick = useCallback(() => {
-
-  }, []);
-
   return (
     <Wrapper>
       <WriteForm userInfo={userInfo} />
@@ -45,22 +39,10 @@ export default function Root({ userInfo }: RootProps) {
               key={log.id}
               data={log}
               isOwner={log.creatorId === userInfo?.uid}
-              setDeleteModal={setDeleteModal}
             />
           })
         }
       </LogList>
-      {
-        deleteModal && (
-          <GlobalConfirmModal
-            onClick={onDeleteClick}
-            setDeleteModal={setDeleteModal}
-            title="로그 삭제"
-            text="정말로 로그를 삭제하시겠어요?"
-            buttonText="삭제하기"
-          />
-        )
-      }
     </Wrapper>
   )
 }
