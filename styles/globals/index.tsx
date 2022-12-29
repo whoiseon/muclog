@@ -1,7 +1,14 @@
 import { Global, Theme } from "@emotion/react";
 import { css } from "@emotion/react";
 
-import {$BORDER_RADIUS, $COLOR_MAIN, $COLOR_MAIN_CLICK, $COLOR_MAIN_HOVER, $COLOR_WHITE} from "styles/variables";
+import {
+  $BORDER_RADIUS,
+  $COLOR_MAIN,
+  $COLOR_MAIN_CLICK,
+  $COLOR_MAIN_HOVER,
+  $COLOR_RED, $COLOR_RED_CLICK, $COLOR_RED_HOVER,
+  $COLOR_WHITE
+} from "styles/variables";
 
 const global = (theme: Theme) => css`
   @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
@@ -76,7 +83,45 @@ const global = (theme: Theme) => css`
     &:active {
       background-color: inherit;
     }
-  } 
+  }
+  
+  button[data-button="red"] {
+    border: 0;
+    border-radius: ${$BORDER_RADIUS};
+    color: ${$COLOR_WHITE};
+    background-color: ${$COLOR_RED};
+    font-weight: bold;
+    cursor: pointer;
+    transition: all .16s ease;
+    
+    &:hover {
+      color: ${$COLOR_WHITE};
+      background-color: ${$COLOR_RED_HOVER};
+    }
+    
+    &:active {
+      background-color: ${$COLOR_RED_CLICK};
+    }
+  }
+  
+  button[data-button="border"] {
+    border: ${theme.mode.globalModalButtonBorder};
+    border-radius: ${$BORDER_RADIUS};
+    color: ${$COLOR_WHITE};
+    background: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all .16s ease;
+    
+    &:hover {
+      color: ${$COLOR_WHITE};
+      background-color: ${theme.mode.globalModalButtonHover};
+    }
+    
+    &:active {
+      background: none;
+    }
+  }
   
   button[name="github"], button[name="google"] {
     background-color: ${theme.mode.whiteButtonBackground};
@@ -189,6 +234,14 @@ const global = (theme: Theme) => css`
           }
         }
       }
+    }
+  }
+  
+  div[data-layout="globalConfirmModal"] {
+    background-color: ${theme.mode.globalModalBackground};
+    
+    h1 {
+      border-bottom: ${theme.mode.globalModalTitleBorder};
     }
   }
 `;

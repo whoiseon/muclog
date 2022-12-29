@@ -1,36 +1,22 @@
-import {ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState} from "react";
+import {ChangeEvent, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useRef, useState} from "react";
 import Image from "next/image";
 
 import { db } from "lib/firebase";
-import {collection, addDoc, query, doc, onSnapshot, DocumentData, orderBy} from "@firebase/firestore";
-import TextareaAutosize, { TextareaAutosizeProps } from "react-textarea-autosize";
+import {collection, addDoc} from "@firebase/firestore";
+import TextareaAutosize from "react-textarea-autosize";
 
 import {Editor, FocusUnderline, Form, LogList, Textarea, TextareaTools} from "components/mobile/WriteForm/styles";
 import {User} from "@firebase/auth";
-import Log from "components/mobile/Log";
 
 interface WriteFormProps {
-  userInfo: User | null
+  userInfo: User | null,
 }
 
 export default function WriteForm({ userInfo }: WriteFormProps) {
   const contentRef = useRef<any>(null);
 
   const [content, setContent] = useState("");
-  const [logs, setLogs] = useState<DocumentData[]>([]);
   const [isWriting, setIsWriting] = useState(false);
-
-  useEffect(() => {
-    const q = query(collection(db, "logs"), orderBy("createdAt", "desc"))
-    onSnapshot(q, (snapshot) => {
-      const logArray = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      setLogs(logArray);
-    })
-  }, []);
 
   const onChangeContent = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => {
     setContent(event.target.value);
@@ -106,17 +92,6 @@ export default function WriteForm({ userInfo }: WriteFormProps) {
         </TextareaTools>
         {isWriting && <FocusUnderline/>}
       </Editor>
-      <LogList>
-        {
-          logs.map((log) => {
-            return <Log
-              key={log.id}
-              data={log}
-              isOwner={log.creatorId === userInfo?.uid}
-            />
-          })
-        }
-      </LogList>
     </Form>
   )
 }

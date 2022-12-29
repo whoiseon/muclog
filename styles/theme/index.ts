@@ -36,7 +36,11 @@ export const lightTheme: Theme = {
     cardBackground: $BACKGROUND_COLOR_EXTRA_WHITE,
     cardBorder: '1px solid rgba(0, 0, 0, 0.06)',
     smallModalBackground: $BACKGROUND_COLOR_SEMI_WHITE,
-    smallModalColor: $COLOR_BLACK
+    smallModalColor: $COLOR_BLACK,
+    globalModalBackground: $BACKGROUND_COLOR_WHITE,
+    globalModalTitleBorder: '1px solid rgba(0, 0, 0, 0.06)',
+    globalModalButtonBorder: '1px solid rgba(0, 0, 0, 0.06)',
+    globalModalButtonHover: 'rgba(0, 0, 0, 0.04)',
   },
 };
 
@@ -60,6 +64,10 @@ export const darkTheme: Theme = {
     cardBackground: $BACKGROUND_COLOR_SEMI_BLACK,
     cardBorder: '1px solid rgba(0, 0, 0, 0.1)',
     smallModalBackground: $BACKGROUND_COLOR_EXTRA_BLACK,
-    smallModalColor: $COLOR_WHITE
+    smallModalColor: $COLOR_WHITE,
+    globalModalBackground: $BACKGROUND_COLOR_MEDIUM_BLACK,
+    globalModalTitleBorder: '1px solid rgba(255, 255, 255, 0.06)',
+    globalModalButtonBorder: '1px solid rgba(255, 255, 255, 0.1)',
+    globalModalButtonHover: 'rgba(255, 255, 255, 0.04)',
   },
 };

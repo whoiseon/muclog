@@ -10,16 +10,21 @@ import {
 } from "components/mobile/Log/styles";
 import dayjs from "dayjs";
 import Image from "next/image";
-import {useCallback, useState} from "react";
+import {Dispatch, SetStateAction, useCallback, useState} from "react";
 import SmallModal from "components/common/SmallModal";
 
 interface LogProps {
   data: DocumentData,
-  isOwner: boolean
+  isOwner: boolean,
+  setDeleteModal: Dispatch<SetStateAction<boolean>>
 }
 
-export default function Log({ data, isOwner }: LogProps) {
+export default function Log({ data, isOwner, setDeleteModal }: LogProps) {
   const [moreModal, setMoreModal] = useState(false);
+
+  const openDeleteConfirmModal = useCallback(() => {
+    setDeleteModal(true);
+  }, []);
 
   const handleMoreModal = useCallback(() => {
     setMoreModal(prev => !prev);
@@ -85,7 +90,7 @@ export default function Log({ data, isOwner }: LogProps) {
                         </button>
                       </li>
                       <li>
-                        <button>
+                        <button onClick={openDeleteConfirmModal}>
                           <span>삭제</span>
                         </button>
                       </li>

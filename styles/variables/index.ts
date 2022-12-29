@@ -17,9 +17,15 @@ export const $COLOR_MAIN_HOVER = '#6277BE';
 export const $COLOR_MAIN_CLICK = '#8196E2';
 
 export const $COLOR_WHITE = '#FFFFFF';
+
 export const $COLOR_BLACK = '#1e2124';
+
 export const $COLOR_GRAY = '#99aab5';
+
 export const $COLOR_RED = '#ed4245';
+export const $COLOR_RED_HOVER = '#CE373A';
+export const $COLOR_RED_CLICK = '#FF6E70';
+
 export const $COLOR_PINK = '#eb459e';
 
 export const $BORDER_RADIUS = '4px';

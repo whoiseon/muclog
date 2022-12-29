@@ -7,6 +7,10 @@ const ModalAnimation = keyframes`
     transform: scale(0);
   }
 
+  60% {
+    transform: scale(1.05);
+  }
+
   100% {
     transform: scale(1);
   }
@@ -19,7 +23,7 @@ export const Wrapper = styled.div<{ top: number, right: number }>`
   width: 140px;
   padding: 10px;
   border-radius: 6px;
-  animation: ${ModalAnimation} 0.1s ease-in;
+  animation: ${ModalAnimation} 0.3s ease;
   
   ul {
     li {
