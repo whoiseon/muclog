@@ -34,7 +34,7 @@ export const CreatedAt = styled.div`
   }
 `;
 
-export const Content = styled.p`
+export const Content = styled.div`
   padding: 20px;
   line-height: 24px;
 `;

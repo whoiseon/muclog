@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {useRouter} from "next/router";
-import {Dispatch, SetStateAction, useCallback} from "react";
+import {Dispatch, SetStateAction, useCallback, useState} from "react";
 
 import {
   ArrowIcon,
@@ -13,6 +13,7 @@ import Image from "next/image";
 
 import {signOut, User} from "@firebase/auth";
 import {auth} from "lib/firebase";
+import GlobalConfirmModal from "components/common/GlobalConfirmModal";
 
 interface MenusProps {
   setMenuActive: Dispatch<SetStateAction<boolean>>,
@@ -24,11 +25,21 @@ interface MenusProps {
 export default function Menus({ setMenuActive, isDark, setIsDark, userInfo }: MenusProps) {
   const router = useRouter();
 
+  const [logoutConfirmModal, setLogoutConfirmModal] = useState(false);
+
+  const onClickMovePage = useCallback(() => {
+    setMenuActive(false);
+  }, []);
+
+  const openLogoutConfirmModal = useCallback(() => {
+    setLogoutConfirmModal(true);
+  }, []);
+
   const handleCloseMenu = useCallback(() => {
     setMenuActive(false);
   }, []);
 
-  const onLogOutClick = useCallback(async () => {
+  const handleLogout = useCallback(async () => {
     await signOut(auth);
     await router.push("/");
     setMenuActive(false);
@@ -36,10 +47,6 @@ export default function Menus({ setMenuActive, isDark, setIsDark, userInfo }: Me
 
   const handleDarkModeToggle = useCallback(() => {
     setIsDark((prev) => !prev);
-  }, []);
-
-  const onClickMovePage = useCallback(() => {
-    setMenuActive(false);
   }, []);
 
   return (
@@ -131,7 +138,7 @@ export default function Menus({ setMenuActive, isDark, setIsDark, userInfo }: Me
       </ul>
       <ul data-layout="mobile-menu-ul">
         <li>
-          <button onClick={onLogOutClick}>
+          <button onClick={openLogoutConfirmModal}>
             로그아웃
           </button>
         </li>
@@ -159,6 +166,17 @@ export default function Menus({ setMenuActive, isDark, setIsDark, userInfo }: Me
           }
         </button>
       </DarkModeToggle>
+      {
+        logoutConfirmModal && (
+          <GlobalConfirmModal
+            onClick={handleLogout}
+            setModal={setLogoutConfirmModal}
+            title="로그아웃"
+            text="정말로 로그아웃 하시겠어요?"
+            buttonText="로그아웃"
+          />
+        )
+      }
     </Wrapper>
   );
 };

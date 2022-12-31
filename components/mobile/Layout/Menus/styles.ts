@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import {$BACKGROUND_COLOR_BLACK, $BACKGROUND_COLOR_EXTRA_BLACK, $COLOR_GRAY, $COLOR_RED} from "styles/variables";
+import {$COLOR_RED} from "styles/variables";
 
 export const Wrapper = styled.div`
   position: relative;
