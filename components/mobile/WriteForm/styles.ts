@@ -2,28 +2,30 @@ import styled from "@emotion/styled";
 import {$BACKGROUND_COLOR_BLACK, $COLOR_MAIN} from "styles/variables";
 import {keyframes} from "@emotion/react";
 
-export const Form = styled.form`
+export const Wrapper = styled.div`
+  margin-bottom: 10px;
 
-`;
-
-export const Editor = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 6px;
-`;
-
-export const Textarea = styled.div<{ focus: boolean }>`
-  textarea {
+  button {
     width: 100%;
-    padding: 20px;
     height: auto;
     border-radius: 0;
     line-height: 20px;
-    box-shadow: ${({ focus }) => focus ? `0 3px 6px rgba(0, 0, 0, 0.2)` : 'none'};
     transition: box-shadow 0.16s ease;
+    text-align: left;
   }
 `;
+
+export const ModalWrapper = styled.div<{ writeActive: boolean }>`
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transform: ${({ writeActive }) => writeActive ? 'translateY(0)' : 'translateY(100%)'};
+  transition: transform 0.1s ease-in;
+  z-index: 999;
+`;
+
 
 export const TextareaTools = styled.div`
   height: 60px;
@@ -52,17 +54,3 @@ const FocusAnimation = keyframes`
     transform: translateX(0);
   }
 `
-
-export const FocusUnderline = styled.div`
-  position: absolute;
-  left: 0;
-  bottom: 4px;
-  width: 100%;
-  height: 1px;
-  background-color: ${$COLOR_MAIN};
-  animation: ${FocusAnimation} 0.3s ease-in;
-`;
-
-export const LogList = styled.div`
-
-`;

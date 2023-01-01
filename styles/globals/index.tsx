@@ -136,6 +136,29 @@ const global = (theme: Theme) => css`
     }
   }
   
+  button[data-layout="writeButton"] {
+    display: flex;
+    align-items: center;
+    background-color: ${theme.mode.inputBackground};
+    color: ${theme.mode.inputColor};
+    font-weight: 500;
+    padding: 20px;
+    cursor: text;
+    
+    &:hover {
+      background-color: ${theme.mode.inputBackground};
+      color: ${theme.mode.inputColor};
+    }
+    
+    span {
+      opacity: 0.5;
+    }
+    
+    & > div {
+      margin-right: 20px;
+    }
+  }
+  
   button {
     border: 0;
     border-radius: ${$BORDER_RADIUS};
@@ -193,6 +216,17 @@ const global = (theme: Theme) => css`
     outline: none;
   }
   
+  input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+  
   textarea {
     resize: none;
     border-bottom: ${theme.mode.mobileMenuHeaderBorder};
@@ -248,6 +282,19 @@ const global = (theme: Theme) => css`
     h1 {
       border-bottom: ${theme.mode.globalModalTitleBorder};
     }
+  }
+  
+  div[data-layout="writeFormHeader"] {
+    background-color: ${theme.mode.headerBackground};
+  }
+  
+  form[data-layout="writeForm"] {
+    background-color: ${theme.mode.inputBackground};
+    color: ${theme.mode.inputColor};
+  }
+  
+  div[data-layout="writeFormTools"] {
+    background-color: ${theme.mode.headerBackground};
   }
 `;
 
