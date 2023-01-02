@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 export const Form = styled.form`
   width: 100%;
   height: 100%;
+  padding-top: 60px;
   cursor: text;
 `;
 
@@ -50,9 +51,27 @@ export const SubmitButton = styled.button`
   padding: 8px 14px;
 `;
 
-export const Textarea = styled.div`
-  padding-top: 60px;
+export const PicturePreview = styled.div`
+  position: relative;
+  width: 100%;
+  height: 200px;
+  cursor: auto;
   
+  button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    padding: 20px;
+    opacity: 0.5;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+`;
+
+export const Textarea = styled.div`
   textarea {
     width: 100%;
     padding: 20px;
@@ -68,10 +87,6 @@ export const WriteTools = styled.div`
   cursor: auto;
   border-radius: 18px 18px 0 0;
   box-shadow: 0 -3px 16px rgba(0, 0, 0, 0.06);
-  
-  ul {
-    padding-bottom: 20px;
-  }
 `;
 
 export const PictureBox = styled.div`

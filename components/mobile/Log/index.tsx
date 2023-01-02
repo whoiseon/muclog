@@ -6,6 +6,7 @@ import {DocumentData, doc, deleteDoc, updateDoc} from "@firebase/firestore";
 import dayjs from "dayjs";
 
 import {
+  Attachment,
   Content,
   CreatedAt, EditForm, Info,
   LogInfo,
@@ -131,6 +132,23 @@ export default function Log({ data, isOwner }: LogProps) {
             </CreatedAt>
           </Info>
         </LogInfo>
+        {
+          data.attachmentUrl && (
+            <Attachment>
+              <Image
+                src={data.attachmentUrl}
+                alt={data.attachmentUrl}
+                priority
+                fill
+                style={{
+                  objectFit: 'cover',
+                  width: '100%',
+                  paddingTop: '20px'
+                }}
+              />
+            </Attachment>
+          )
+        }
         {
           editing
             ? (

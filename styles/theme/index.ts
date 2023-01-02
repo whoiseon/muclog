@@ -49,7 +49,7 @@ export const lightTheme: Theme = {
 export const darkTheme: Theme = {
   mode: {
     text: $COLOR_WHITE,
-    background: $BACKGROUND_COLOR_MEDIUM_BLACK,
+    background: $BACKGROUND_COLOR_BLACK,
     inputBackground: $BACKGROUND_COLOR_EXTRA_BLACK,
     inputColor: $COLOR_WHITE,
     editTextareaBackground: $BACKGROUND_COLOR_EXTRA_BLACK,

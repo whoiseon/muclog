@@ -34,6 +34,12 @@ export const CreatedAt = styled.div`
   }
 `;
 
+export const Attachment = styled.div`
+  position: relative;
+  width: 100%;
+  height: 300px;
+`;
+
 export const Content = styled.div`
   padding: 20px;
   line-height: 24px;

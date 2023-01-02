@@ -2,14 +2,17 @@ import {ChangeEvent, Dispatch, FormEvent, SetStateAction, useCallback, useRef, u
 import Image from "next/image";
 
 import {addDoc, collection} from "@firebase/firestore";
-import {db} from "lib/firebase";
+import { ref, uploadString, getDownloadURL } from "@firebase/storage";
 import {User} from "@firebase/auth";
+import {db, storage} from "lib/firebase";
+
+import { v4 as randomFileNameUuid } from "uuid";
 
 import useInput from "hooks/useInput";
 import {
   CloseButton,
   Form,
-  Header, PictureBox,
+  Header, PictureBox, PicturePreview,
   SubmitButton,
   Textarea,
   Title,
@@ -26,7 +29,7 @@ export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps)
   const TextRef = useRef<any>(null);
 
   const [content, onChangeContent, setContent] = useInput("");
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
 
   const contentsReplaceNewline = useCallback(() => {
     return content.replaceAll("\n", "<br />");
@@ -34,6 +37,7 @@ export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps)
 
   const handleCloseModal = useCallback(() => {
     setWriteModal(false);
+    setAttachment("");
   }, []);
 
   const handleFocusTextarea = useCallback(() => {
@@ -43,24 +47,39 @@ export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps)
     TextRef.current.focus();
   }, [TextRef]);
 
+  const handleClearAttachment = useCallback(() => {
+    setAttachment("");
+  }, []);
+
   const onSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
+      let attachmentUrl = "";
+
+      if (attachment !== "") {
+        const attachmentRef = ref(storage, `${userInfo?.email}/${randomFileNameUuid()}`);
+        const response = await uploadString(attachmentRef, attachment, "data_url");
+
+        attachmentUrl = await getDownloadURL(response.ref);
+      }
+
       await addDoc(collection(db, "logs"), {
         content: contentsReplaceNewline(),
         createdAt: Date.now(),
         creatorName: userInfo?.displayName,
         creatorId: userInfo?.uid,
-        creatorProfile: userInfo?.photoURL
+        creatorProfile: userInfo?.photoURL,
+        attachmentUrl
       });
 
       setContent("");
+      setAttachment("");
       setWriteModal(false);
     } catch (error) {
       console.log(error);
     }
-  }, [content]);
+  }, [userInfo, content, attachment, randomFileNameUuid]);
 
   const onFileChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const {
@@ -103,6 +122,33 @@ export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps)
           게시
         </SubmitButton>
       </Header>
+      {
+        attachment && (
+          <PicturePreview>
+            <Image
+              src={attachment}
+              alt="Image Preview"
+              fill
+              style={{
+                objectFit: 'cover',
+                padding: '20px',
+                borderRadius: '26px'
+              }}
+            />
+            <button
+              type="button"
+              onClick={handleClearAttachment}
+            >
+              <Image
+                src="/image/icon/dark/close-dark-icon.svg"
+                alt="Image Clear"
+                width={18}
+                height={18}
+              />
+            </button>
+          </PicturePreview>
+        )
+      }
       <Textarea>
         <TextareaAutosize
           ref={TextRef}
