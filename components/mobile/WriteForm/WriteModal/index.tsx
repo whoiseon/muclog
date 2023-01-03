@@ -1,5 +1,6 @@
 import {ChangeEvent, Dispatch, FormEvent, SetStateAction, useCallback, useRef, useState} from "react";
 import Image from "next/image";
+import {useSelector} from "react-redux";
 
 import {addDoc, collection} from "@firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "@firebase/storage";
@@ -19,14 +20,16 @@ import {
   WriteTools
 } from "components/mobile/WriteForm/WriteModal/styles";
 import TextareaAutosize from "react-textarea-autosize";
-import {$BACKGROUND_COLOR_EXTRA_BLACK} from "styles/variables";
+import {RootState} from "store";
 
 interface WriteModalProps {
-  userInfo: User | null,
   setWriteModal: Dispatch<SetStateAction<boolean>>
 }
 
-export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps) {
+export default function WriteModal({ setWriteModal }: WriteModalProps) {
+  const authInfo = useSelector((state: RootState) => state.auth);
+  const userInfo = useSelector((state: RootState) => state.user);
+
   const TextRef = useRef<any>(null);
 
   const [content, onChangeContent, setContent] = useInput("");
@@ -70,7 +73,7 @@ export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps)
         content: contentsReplaceNewline(),
         createdAt: Date.now(),
         creatorName: userInfo?.displayName,
-        creatorId: userInfo?.uid,
+        creatorId: authInfo?.uid,
         creatorProfile: userInfo?.photoURL,
         attachmentUrl,
         liked: []
@@ -82,7 +85,7 @@ export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps)
     } catch (error) {
       console.log(error);
     }
-  }, [userInfo, content, attachment, randomFileNameUuid]);
+  }, [userInfo, authInfo, content, attachment, randomFileNameUuid]);
 
   const onFileChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const {

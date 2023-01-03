@@ -33,14 +33,18 @@ import TextareaAutosize from "react-textarea-autosize";
 import useInput from "hooks/useInput";
 import {$COLOR_MAIN, $COLOR_WHITE} from "styles/variables";
 import Comment from "components/mobile/Log/Comment";
+import {useSelector} from "react-redux";
+import {RootState} from "store";
 
 interface LogProps {
   data: DocumentData,
   isOwner: boolean,
-  userInfo: User | null
 }
 
-export default function Log({ data, isOwner, userInfo }: LogProps) {
+export default function Log({ data, isOwner }: LogProps) {
+  const authInfo = useSelector((state: RootState) => state.auth);
+  const userInfo = useSelector((state: RootState) => state.user);
+
   const EditTextareaRef = useRef<any>(null);
 
   const [commentContent, onChangeCommentContent, setCommentContent] = useInput("");
@@ -48,7 +52,7 @@ export default function Log({ data, isOwner, userInfo }: LogProps) {
   const [comments, setComments] = useState<DocumentData[]>([]);
   const [commentsLimit, setCommentsLimit] = useState(5)
 
-  const [isLiked, setIsLiked] = useState<boolean>(data.liked.includes(userInfo?.uid));
+  const [isLiked, setIsLiked] = useState<boolean>(data.liked.includes(authInfo?.uid));
   const [editing, setEditing] = useState(false);
   const [openComment, setOpenComment] = useState(false);
 
@@ -147,11 +151,11 @@ export default function Log({ data, isOwner, userInfo }: LogProps) {
 
       if (!isLiked) {
         await updateDoc(logRef, {
-          liked: arrayUnion(userInfo?.uid)
+          liked: arrayUnion(authInfo?.uid)
         });
       } else {
         await updateDoc(logRef, {
-          liked: arrayRemove(userInfo?.uid)
+          liked: arrayRemove(authInfo?.uid)
         })
       }
 
@@ -159,7 +163,7 @@ export default function Log({ data, isOwner, userInfo }: LogProps) {
     } catch (error) {
       console.log(error);
     }
-  }, [data, isLiked, userInfo]);
+  }, [data, isLiked, authInfo]);
 
   const newContentReplaceNewline = useCallback(() => {
     return newLog.replaceAll("\n", "<br />");
@@ -189,7 +193,7 @@ export default function Log({ data, isOwner, userInfo }: LogProps) {
         content: commentContent,
         createdAt: Date.now(),
         creatorName: userInfo?.displayName,
-        creatorId: userInfo?.uid,
+        creatorId: authInfo?.uid,
         creatorProfile: userInfo?.photoURL
       })
 
@@ -197,7 +201,7 @@ export default function Log({ data, isOwner, userInfo }: LogProps) {
     } catch (error) {
       console.log(error);
     }
-  }, [userInfo, data, commentContent]);
+  }, [userInfo, authInfo, data, commentContent]);
 
   useEffect(() => {
     if (editing) {

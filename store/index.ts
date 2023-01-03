@@ -1,15 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userSlice from "store/slices/userSlice";
+import userSlice from "store/slices/user/userSlice";
 import logger from "redux-logger";
+import authSlice from "store/slices/auth/authSlice";
 
 const makeStore = () => {
   return configureStore({
     reducer: {
-      user: userSlice.reducer
+      user: userSlice.reducer,
+      auth: authSlice.reducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(),
+    }).concat(logger),
     devTools: true,
   });
 }

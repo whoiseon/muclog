@@ -17,8 +17,15 @@ import {
   Wrapper
 } from "components/mobile/Auth/styles";
 import Image from "next/image";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "store";
+import {fetchLoginRequest, fetchLoginWithSocial, fetchSignUpRequest} from "store/slices/auth/authSlice";
 
 export default function Auth() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { signUpError, loginError } = useSelector((state: RootState) => state.auth);
+
   const [newAccount, setNewAccount] = useState(false);
 
   const [name, onChangeName, setName] = useInput("");
@@ -26,54 +33,42 @@ export default function Auth() {
   const [password, onChangePassword, setPassword] = useInput("");
   const [error, setError] = useState("");
 
-  const onSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      let data
 
-      if (newAccount) {
-        data = await createUserWithEmailAndPassword(auth, email, password);
-        await updateProfile(data.user, {
-          displayName: name
-        })
-      } else {
-        data = await signInWithEmailAndPassword(auth, email, password);
-      }
-    } catch (error: any) {
-      setError(error.code);
+    if (newAccount) {
+      dispatch(fetchSignUpRequest({
+        name,
+        email,
+        password
+      }));
+    } else {
+      dispatch(fetchLoginRequest({
+        email,
+        password
+      }));
     }
   }, [newAccount, email, password]);
 
   const toggleAccount = () => setNewAccount((prev) => !prev);
 
-  const handleErrorTranslate = (error: string) => {
-    switch (error) {
-      case 'auth/user-not-found':
-        return '아이디와 비밀번호를 다시 확인해주세요.';
-      case 'auth/wrong-password':
-        return '비밀번호를 다시 확인해주세요.';
-      case 'auth/invalid-email':
-        return '이메일 형식에 맞지 않습니다.';
-      default:
-        return error;
-    }
-  }
-
-  const onSocialClick = useCallback(async (event: any) => {
-    const { target: { name } } = event;
-    let provider = new GoogleAuthProvider();
-
-    if (name === "google") {
-      provider = new GoogleAuthProvider();
-    } else if (name === "github") {
-      provider = new GithubAuthProvider();
-    }
-
-    await signInWithPopup(auth, provider)
+  const onSocialClick = useCallback((name: string) => (event: any) => {
+    dispatch(fetchLoginWithSocial({
+      name,
+    }));
   }, []);
 
   useEffect(() => {
+    if (signUpError) {
+      setError(signUpError);
+    } else if (loginError) {
+      setError(loginError);
+    }
+  }, [signUpError, loginError]);
+
+  useEffect(() => {
     setError("");
+    setName("");
     setEmail("");
     setPassword("");
   }, [newAccount])
@@ -106,8 +101,8 @@ export default function Auth() {
               <div>
                 <button
                   type="button"
-                  name="google"
-                  onClick={onSocialClick}
+                  name="Google"
+                  onClick={onSocialClick("Google")}
                 >
                   <SocialIcon>
                     <Image
@@ -120,8 +115,8 @@ export default function Auth() {
                 </button>
                 <button
                   type="button"
-                  name="github"
-                  onClick={onSocialClick}
+                  name="Github"
+                  onClick={onSocialClick("Github")}
                 >
                   <SocialIcon>
                     <Image
@@ -167,7 +162,7 @@ export default function Auth() {
             value={password}
             onChange={onChangePassword}
           />
-          {error && <ErrorMessage>{handleErrorTranslate(error)}</ErrorMessage>}
+          {error && <ErrorMessage>{ error }</ErrorMessage>}
           <button type="submit">
             {
               newAccount

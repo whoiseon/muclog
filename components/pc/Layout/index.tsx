@@ -3,7 +3,6 @@ import {User} from "@firebase/auth";
 interface LayoutProps {
   children: JSX.Element,
   isLoggedIn: boolean,
-  userInfo: User | null
 }
 
 export default function Layout({ children, isLoggedIn }: LayoutProps) {

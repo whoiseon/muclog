@@ -10,10 +10,9 @@ interface LayoutProps {
   isLoggedIn: boolean,
   isDark: boolean,
   setIsDark: Dispatch<SetStateAction<boolean>>,
-  userInfo: User | null
 }
 
-export default function Layout({ children, isLoggedIn, isDark, setIsDark, userInfo }: LayoutProps) {
+export default function Layout({ children, isLoggedIn, isDark, setIsDark }: LayoutProps) {
   const [menuActive, setMenuActive] = useState(false);
 
   return isLoggedIn
@@ -30,7 +29,6 @@ export default function Layout({ children, isLoggedIn, isDark, setIsDark, userIn
             setMenuActive={setMenuActive}
             setIsDark={setIsDark}
             isDark={isDark}
-            userInfo={userInfo}
           />
         </MenuModal>
       </>

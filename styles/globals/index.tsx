@@ -123,7 +123,7 @@ const global = (theme: Theme) => css`
     }
   }
   
-  button[name="github"], button[name="google"] {
+  button[name="Github"], button[name="Google"] {
     background-color: ${theme.mode.whiteButtonBackground};
     border: ${theme.mode.whiteButtonBorder};
     

@@ -1,6 +1,4 @@
 import styled from "@emotion/styled";
-import {$BACKGROUND_COLOR_BLACK, $COLOR_MAIN} from "styles/variables";
-import {keyframes} from "@emotion/react";
 
 export const Wrapper = styled.div`
   margin-bottom: 10px;
@@ -12,6 +10,12 @@ export const Wrapper = styled.div`
     line-height: 20px;
     transition: box-shadow 0.16s ease;
     text-align: left;
+    
+    & > div {
+      img {
+        border-radius: 50%;
+      }
+    }
   }
 `;
 

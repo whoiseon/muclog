@@ -1,4 +1,5 @@
 import {useCallback, useEffect, useState} from "react";
+import {useSelector} from "react-redux";
 
 import {User} from "@firebase/auth";
 
@@ -9,12 +10,11 @@ import {LogList, Wrapper} from "components/mobile/Root/styles";
 import Log from "components/mobile/Log";
 import LogSkeleton from "components/common/Skeleton/LogSkeleton";
 import WriteForm from "components/mobile/WriteForm";
+import {RootState} from "store";
 
-interface RootProps {
-  userInfo: User | null
-}
+export default function Root() {
+  const authInfo = useSelector((state: RootState) => state.auth);
 
-export default function Root({ userInfo }: RootProps) {
   const [logs, setLogs] = useState<DocumentData[]>([]);
   const [logsLimit, setLogsLimit] = useState(20);
 
@@ -28,11 +28,11 @@ export default function Root({ userInfo }: RootProps) {
 
       setLogs(logArray);
     })
-  }, []);
+  }, [logsLimit]);
 
   return (
     <Wrapper>
-      <WriteForm userInfo={userInfo} />
+      <WriteForm />
       <LogList>
         {
           logs.length > 0
@@ -41,8 +41,7 @@ export default function Root({ userInfo }: RootProps) {
                 return <Log
                   key={log.id}
                   data={log}
-                  isOwner={log.creatorId === userInfo?.uid}
-                  userInfo={userInfo}
+                  isOwner={log.creatorId === authInfo?.uid}
                 />
               })
             )

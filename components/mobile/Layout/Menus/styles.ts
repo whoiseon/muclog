@@ -77,6 +77,10 @@ export const MyName = styled.h1`
 
 export const Profile = styled.div`
   margin-right: 12px;
+  
+  img {
+    border-radius: 50%;
+  }
 `;
 
 export const CloseButton = styled.div`

@@ -14,16 +14,19 @@ import Image from "next/image";
 import {signOut, User} from "@firebase/auth";
 import {auth} from "lib/firebase";
 import GlobalConfirmModal from "components/common/GlobalConfirmModal";
+import {useSelector} from "react-redux";
+import {RootState} from "store";
 
 interface MenusProps {
   setMenuActive: Dispatch<SetStateAction<boolean>>,
   isDark: boolean,
   setIsDark: Dispatch<SetStateAction<boolean>>,
-  userInfo: User | null
 }
 
-export default function Menus({ setMenuActive, isDark, setIsDark, userInfo }: MenusProps) {
+export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) {
   const router = useRouter();
+
+  const userInfo = useSelector((state: RootState) => state.user);
 
   const [logoutConfirmModal, setLogoutConfirmModal] = useState(false);
 
@@ -57,10 +60,10 @@ export default function Menus({ setMenuActive, isDark, setIsDark, userInfo }: Me
             userInfo?.photoURL
               ? (
                 <Image
-                  src="/image/icon/no-profile-icon.svg"
+                  src={userInfo?.photoURL}
                   alt="No profile"
                   width={32}
-                  height={36}
+                  height={32}
                 />
               )
               : (

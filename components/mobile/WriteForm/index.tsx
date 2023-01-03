@@ -1,18 +1,17 @@
 import {useCallback, useEffect, useState} from "react";
 import Image from "next/image";
+import {useSelector} from "react-redux";
 
 import {
   ModalWrapper,
   Wrapper
 } from "components/mobile/WriteForm/styles";
-import {User} from "@firebase/auth";
 import WriteModal from "components/mobile/WriteForm/WriteModal";
+import {RootState} from "store";
 
-interface WriteFormProps {
-  userInfo: User | null,
-}
+export default function WriteForm() {
+  const userInfo = useSelector((state: RootState) => state.user);
 
-export default function WriteForm({ userInfo }: WriteFormProps) {
   const [writeModal, setWriteModal] = useState(false);
 
   const openWriteModal = useCallback(() => {
@@ -40,7 +39,7 @@ export default function WriteForm({ userInfo }: WriteFormProps) {
               userInfo?.photoURL
                 ? (
                   <Image
-                    src="/image/icon/no-profile-icon.svg"
+                    src={userInfo?.photoURL}
                     alt="No profile"
                     width={32}
                     height={32}
@@ -61,7 +60,6 @@ export default function WriteForm({ userInfo }: WriteFormProps) {
       </Wrapper>
       <ModalWrapper writeActive={writeModal}>
         <WriteModal
-          userInfo={userInfo}
           setWriteModal={setWriteModal}
         />
       </ModalWrapper>

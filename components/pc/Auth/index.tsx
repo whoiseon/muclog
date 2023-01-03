@@ -21,8 +21,15 @@ import {
 
 import {SocialIcon, SocialLogin} from "components/pc/Auth/styles";
 import Animation from "components/common/Animation";
+import {fetchLoginRequest, fetchSignUpRequest} from "store/slices/auth/authSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "store";
 
 export default function Auth() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { signUpError, loginError } = useSelector((state: RootState) => state.auth);
+
   const [newAccount, setNewAccount] = useState(false);
 
   const [name, onChangeName, setName] = useInput("");
@@ -30,22 +37,20 @@ export default function Auth() {
   const [password, onChangePassword, setPassword] = useInput("");
   const [error, setError] = useState("");
 
-  const onSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      let data
 
-      if (newAccount) {
-        data = await createUserWithEmailAndPassword(auth, email, password);
-        await updateProfile(data.user, {
-          displayName: name
-        })
-      } else {
-        data = await signInWithEmailAndPassword(auth, email, password);
-      }
-      console.log(data);
-    } catch (error: any) {
-      setError(error.code);
+    if (newAccount) {
+      dispatch(fetchSignUpRequest({
+        name,
+        email,
+        password
+      }));
+    } else {
+      dispatch(fetchLoginRequest({
+        email,
+        password
+      }));
     }
   }, [newAccount, email, password]);
 
@@ -64,21 +69,19 @@ export default function Auth() {
     await signInWithPopup(auth, provider)
   }, []);
 
-  const handleErrorTranslate = (error: string) => {
-    switch (error) {
-      case 'auth/user-not-found':
-        return '아이디와 비밀번호를 다시 확인해주세요.';
-      case 'auth/wrong-password':
-        return '비밀번호를 다시 확인해주세요.';
-      case 'auth/invalid-email':
-        return '이메일 형식에 맞지 않습니다.';
-      default:
-        return error;
+  useEffect(() => {
+    if (signUpError) {
+      setError(signUpError);
+    } else if (loginError) {
+      setError(loginError);
     }
-  }
+  }, [signUpError, loginError]);
 
   useEffect(() => {
     setError("");
+    setName("");
+    setEmail("");
+    setPassword("");
   }, [newAccount])
 
   return (
@@ -172,7 +175,7 @@ export default function Auth() {
                 onChange={onChangePassword}
               />
             </InputWrapper>
-            {error && <ErrorMessage>{handleErrorTranslate(error)}</ErrorMessage>}
+            {error && <ErrorMessage>{ error }</ErrorMessage>}
             <button type="submit">
               {
                 newAccount
