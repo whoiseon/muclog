@@ -58,28 +58,6 @@ export default function WriteForm({ userInfo }: WriteFormProps) {
           </div>
           <span>지금 무슨 생각을 하고 계신가요?</span>
         </button>
-        {/*<TextareaTools>*/}
-        {/*  <button type="button">*/}
-        {/*    <div>*/}
-        {/*      <Image*/}
-        {/*        src="/image/icon/picture-icon.svg"*/}
-        {/*        alt="Picture"*/}
-        {/*        width={18}*/}
-        {/*        height={18}*/}
-        {/*      />*/}
-        {/*    </div>*/}
-        {/*  </button>*/}
-        {/*  <button type="submit">*/}
-        {/*    <div>*/}
-        {/*      <Image*/}
-        {/*        src="/image/icon/send-icon.svg"*/}
-        {/*        alt="Send"*/}
-        {/*        width={18}*/}
-        {/*        height={18}*/}
-        {/*      />*/}
-        {/*    </div>*/}
-        {/*  </button>*/}
-        {/*</TextareaTools>*/}
       </Wrapper>
       <ModalWrapper writeActive={writeModal}>
         <WriteModal

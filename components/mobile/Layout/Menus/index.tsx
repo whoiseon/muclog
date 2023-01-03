@@ -6,7 +6,7 @@ import {
   ArrowIcon,
   CloseButton, DarkModeToggle,
   Icon,
-  MyName,
+  MyName, Profile,
   Wrapper
 } from "components/mobile/Layout/Menus/styles";
 import Image from "next/image";
@@ -52,6 +52,27 @@ export default function Menus({ setMenuActive, isDark, setIsDark, userInfo }: Me
   return (
     <Wrapper>
       <MyName data-layout="mobile-menu-header">
+        <Profile>
+          {
+            userInfo?.photoURL
+              ? (
+                <Image
+                  src="/image/icon/no-profile-icon.svg"
+                  alt="No profile"
+                  width={32}
+                  height={36}
+                />
+              )
+              : (
+                <Image
+                  src="/image/icon/no-profile-icon.svg"
+                  alt="No profile"
+                  width={32}
+                  height={32}
+                />
+              )
+          }
+        </Profile>
         <span>{ userInfo?.displayName }</span>
         <span>{ userInfo?.email }</span>
       </MyName>

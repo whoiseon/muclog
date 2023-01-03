@@ -60,7 +60,7 @@ export const darkTheme: Theme = {
     whiteButtonHover: $BACKGROUND_COLOR_LIGHT_BLACK_HOVER,
     headerBackground: $BACKGROUND_COLOR_BLACK,
     headerBorder: `none`,
-    mobileMenuBackground: $BACKGROUND_COLOR_MEDIUM_BLACK,
+    mobileMenuBackground: $BACKGROUND_COLOR_SEMI_BLACK,
     mobileMenuHeaderBackground: $BACKGROUND_COLOR_EXTRA_BLACK,
     mobileMenuHeaderBorder: `none`,
     mobileMenuUlBackground: $BACKGROUND_COLOR_BLACK,

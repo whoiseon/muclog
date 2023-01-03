@@ -13,7 +13,6 @@ export const Wrapper = styled.div`
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-    opacity: 60%;
     
     li:first-of-type {
       a {
@@ -74,6 +73,10 @@ export const MyName = styled.h1`
     font-size: 14px;
     opacity: 0.5;
   }
+`;
+
+export const Profile = styled.div`
+  margin-right: 12px;
 `;
 
 export const CloseButton = styled.div`

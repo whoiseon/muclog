@@ -33,9 +33,6 @@ export default function Layout({ children, isLoggedIn, isDark, setIsDark, userIn
             userInfo={userInfo}
           />
         </MenuModal>
-        {/*<footer>*/}
-        {/*  footer*/}
-        {/*</footer>*/}
       </>
     )
     : children

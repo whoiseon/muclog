@@ -19,6 +19,7 @@ import {
   WriteTools
 } from "components/mobile/WriteForm/WriteModal/styles";
 import TextareaAutosize from "react-textarea-autosize";
+import {$BACKGROUND_COLOR_EXTRA_BLACK} from "styles/variables";
 
 interface WriteModalProps {
   userInfo: User | null,
@@ -37,6 +38,7 @@ export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps)
 
   const handleCloseModal = useCallback(() => {
     setWriteModal(false);
+    setContent("");
     setAttachment("");
   }, []);
 
@@ -58,7 +60,7 @@ export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps)
       let attachmentUrl = "";
 
       if (attachment !== "") {
-        const attachmentRef = ref(storage, `${userInfo?.email}/${randomFileNameUuid()}`);
+        const attachmentRef = ref(storage, `${userInfo?.email}/logs/${randomFileNameUuid()}`);
         const response = await uploadString(attachmentRef, attachment, "data_url");
 
         attachmentUrl = await getDownloadURL(response.ref);
@@ -70,7 +72,8 @@ export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps)
         creatorName: userInfo?.displayName,
         creatorId: userInfo?.uid,
         creatorProfile: userInfo?.photoURL,
-        attachmentUrl
+        attachmentUrl,
+        liked: []
       });
 
       setContent("");
@@ -118,7 +121,10 @@ export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps)
         <Title>
           게시물 작성하기
         </Title>
-        <SubmitButton type="submit">
+        <SubmitButton
+          type="submit"
+          disabled={content.length <= 0}
+        >
           게시
         </SubmitButton>
       </Header>
@@ -140,9 +146,9 @@ export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps)
               onClick={handleClearAttachment}
             >
               <Image
-                src="/image/icon/dark/close-dark-icon.svg"
+                src="/image/icon/image-delete-icon.svg"
                 alt="Image Clear"
-                width={18}
+                width={24}
                 height={18}
               />
             </button>
@@ -153,7 +159,6 @@ export default function WriteModal({ userInfo, setWriteModal }: WriteModalProps)
         <TextareaAutosize
           ref={TextRef}
           placeholder="지금 무슨 생각을 하고 계신가요?"
-          maxLength={120}
           value={content}
           onChange={onChangeContent}
           rows={1}

@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import {$COLOR_MAIN} from "styles/variables";
 
 export const Form = styled.form`
   width: 100%;
@@ -27,6 +28,7 @@ export const CloseButton = styled.button`
   background: none;
   opacity: 50%;
   transition: opacity 0.16s ease;
+  z-index: 2;
   
   &:hover {
     opacity: 100%;
@@ -49,12 +51,22 @@ export const SubmitButton = styled.button`
   top: 14px;
   right: 10px;
   padding: 8px 14px;
+  z-index: 2;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: unset;
+    
+    &:hover {
+      background-color: ${$COLOR_MAIN};
+    }
+  }
 `;
 
 export const PicturePreview = styled.div`
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 300px;
   cursor: auto;
   
   button {

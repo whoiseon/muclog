@@ -44,13 +44,3 @@ export const TextareaTools = styled.div`
     }
   }
 `;
-
-const FocusAnimation = keyframes`
-  0% {
-    transform: translateX(-100%);
-  }
-
-  100% {
-    transform: translateX(0);
-  }
-`

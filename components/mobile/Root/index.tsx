@@ -1,16 +1,14 @@
-import {useRouter} from "next/router";
+import {useCallback, useEffect, useState} from "react";
 
 import {User} from "@firebase/auth";
 
-import {LogList, Wrapper} from "components/mobile/Root/styles";
-import WriteForm from "components/mobile/WriteForm";
-import Log from "components/mobile/Log";
-import {useCallback, useEffect, useState} from "react";
-import {collection, DocumentData, onSnapshot, orderBy, query} from "@firebase/firestore";
+import {collection, DocumentData, onSnapshot, orderBy, limit, query} from "@firebase/firestore";
 import {db} from "lib/firebase";
-import GlobalConfirmModal from "components/common/GlobalConfirmModal";
-import Skeleton from "components/common/Skeleton";
+
+import {LogList, Wrapper} from "components/mobile/Root/styles";
+import Log from "components/mobile/Log";
 import LogSkeleton from "components/common/Skeleton/LogSkeleton";
+import WriteForm from "components/mobile/WriteForm";
 
 interface RootProps {
   userInfo: User | null
@@ -18,9 +16,10 @@ interface RootProps {
 
 export default function Root({ userInfo }: RootProps) {
   const [logs, setLogs] = useState<DocumentData[]>([]);
+  const [logsLimit, setLogsLimit] = useState(20);
 
   useEffect(() => {
-    const q = query(collection(db, "logs"), orderBy("createdAt", "desc"))
+    const q = query(collection(db, "logs"), orderBy("createdAt", "desc"), limit(logsLimit));
     onSnapshot(q, (snapshot) => {
       const logArray = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -43,6 +42,7 @@ export default function Root({ userInfo }: RootProps) {
                   key={log.id}
                   data={log}
                   isOwner={log.creatorId === userInfo?.uid}
+                  userInfo={userInfo}
                 />
               })
             )

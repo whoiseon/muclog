@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import {keyframes} from "@emotion/react";
 
 export const Wrapper = styled.div`
   position: relative;
@@ -38,6 +39,19 @@ export const Attachment = styled.div`
   position: relative;
   width: 100%;
   height: 300px;
+
+  button {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    background: none;
+    padding: 20px;
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
 `;
 
 export const Content = styled.div`
@@ -60,6 +74,86 @@ export const MoreButton = styled.div`
     &:hover {
       opacity: 1;
     }
+  }
+`;
+
+const LogToolsActiveAnimation = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  
+  20% {
+    transform: rotate(5deg);
+  }
+  
+  40% {
+    transform: rotate(-5deg);
+  }
+  
+  60% {
+    transform: rotate(5deg);
+  }
+
+  80% {
+    transform: scale(1.12) rotate(-5deg);
+  }
+  
+  100% {
+    transform: scale(1) rotate(0);
+  }
+`
+
+export const LogTools = styled.div`
+  width: 100%;
+  display: flex;
+  
+  button {
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    background: none;
+    border-radius: 0;
+    padding: 12px 0;
+    
+    img {
+      margin-right: 10px;
+    }
+    
+    &:active {
+      animation: ${LogToolsActiveAnimation} 0.5s ease-in;
+    }
+  }
+`;
+
+export const CommentList = styled.div`
+  padding-top: 12px;
+  
+  form {
+    display: flex;
+    padding: 14px 20px;
+    margin-top: 12px;
+    
+    img {
+      margin-right: 14px;
+    }
+    
+    input {
+      width: 100%;
+      padding: 0 12px;
+    }
+  }
+`;
+
+export const NoComments = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+  opacity: 0.3;
+  
+  img {
+    margin-bottom: 20px;
   }
 `;
 

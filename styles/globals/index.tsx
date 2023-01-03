@@ -296,6 +296,40 @@ const global = (theme: Theme) => css`
   div[data-layout="writeFormTools"] {
     background-color: ${theme.mode.headerBackground};
   }
+  
+  div[data-layout="logsTools"] {
+    border-top: 1px solid ${theme.mode.background};
+    
+    button {
+      background-color: ${theme.mode.cardBackground};
+      color: ${theme.mode.text};
+      font-weight: 500;
+      
+      &:active {
+        background-color: ${theme.mode.cardBackground};
+        opacity: 0.6;
+      }
+    }
+    
+    button:first-of-type {
+      border-right: 1px solid ${theme.mode.background};
+    }
+  }
+  
+  div[data-layout="commentWrapper"] {
+    border-top: 1px solid ${theme.mode.background};
+  }
+  
+  form[data-layout="commentInput"] {
+    border-top: 1px solid ${theme.mode.background};
+  }
+  
+  div[data-layout="commentText"] {
+    background-color: ${theme.mode.background};
+    padding: 12px;
+    border: ${theme.mode.cardBorder};
+    border-radius: 4px;
+  }
 `;
 
 const GlobalStyle = () => {

@@ -2,15 +2,27 @@ import {FormEvent, useCallback, useEffect, useRef, useState} from "react";
 import Image from "next/image";
 
 import {db} from "lib/firebase";
-import {DocumentData, doc, deleteDoc, updateDoc} from "@firebase/firestore";
+import { storage } from "lib/firebase";
+import { ref, deleteObject } from "@firebase/storage";
+import {
+  DocumentData,
+  doc,
+  addDoc,
+  deleteDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  collection, query, orderBy, limit, onSnapshot, where
+} from "@firebase/firestore";
 import dayjs from "dayjs";
+import {User} from "@firebase/auth";
 
 import {
-  Attachment,
+  Attachment, CommentList,
   Content,
   CreatedAt, EditForm, Info,
-  LogInfo,
-  MoreButton,
+  LogInfo, LogTools,
+  MoreButton, NoComments,
   Profile,
   UserName,
   Wrapper
@@ -19,16 +31,26 @@ import GlobalConfirmModal from "components/common/GlobalConfirmModal";
 import SmallModal from "components/common/SmallModal";
 import TextareaAutosize from "react-textarea-autosize";
 import useInput from "hooks/useInput";
+import {$COLOR_MAIN, $COLOR_WHITE} from "styles/variables";
+import Comment from "components/mobile/Log/Comment";
 
 interface LogProps {
   data: DocumentData,
   isOwner: boolean,
+  userInfo: User | null
 }
 
-export default function Log({ data, isOwner }: LogProps) {
+export default function Log({ data, isOwner, userInfo }: LogProps) {
   const EditTextareaRef = useRef<any>(null);
 
+  const [commentContent, onChangeCommentContent, setCommentContent] = useInput("");
+
+  const [comments, setComments] = useState<DocumentData[]>([]);
+  const [commentsLimit, setCommentsLimit] = useState(5)
+
+  const [isLiked, setIsLiked] = useState<boolean>(data.liked.includes(userInfo?.uid));
   const [editing, setEditing] = useState(false);
+  const [openComment, setOpenComment] = useState(false);
 
   const contentsReplaceNewline = useCallback(() => {
     return data.content.replaceAll("<br />", "\n");
@@ -39,6 +61,25 @@ export default function Log({ data, isOwner }: LogProps) {
   const [moreModal, setMoreModal] = useState(false);
   const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
   const [updateConfirmModal, setUpdateConfirmModal] = useState(false);
+  const [imageDeleteConfirmModal, setImageDeleteConfirmModal] = useState(false);
+
+  useEffect(() => {
+    const q = query(
+      collection(db, "comments"),
+      where("logId", "==", `${data.id}`),
+      orderBy("createdAt", "desc"),
+      limit(commentsLimit)
+    );
+
+    onSnapshot(q, (snapshot) => {
+      const commentArray = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setComments(commentArray);
+    })
+  }, [openComment]);
 
   const openDeleteConfirmModal = useCallback(() => {
     setDeleteConfirmModal(true);
@@ -48,13 +89,26 @@ export default function Log({ data, isOwner }: LogProps) {
     setUpdateConfirmModal(true);
   }, []);
 
+  const openImageDeleteConfirmModal = useCallback(() => {
+    setImageDeleteConfirmModal(true);
+  }, []);
+
   const openMoreModal = useCallback(() => {
     setMoreModal(prev => !prev);
+  }, []);
+
+  const openCommentList = useCallback(() => {
+    setOpenComment(prev => !prev);
   }, []);
 
   const handleDeleteLog = useCallback( async () => {
     try {
       await deleteDoc(doc(db, "logs", data.id));
+
+      if (data.attachmentUrl !== "") {
+        const attachmentRef = ref(storage, data.attachmentUrl);
+        await deleteObject(attachmentRef);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -70,6 +124,43 @@ export default function Log({ data, isOwner }: LogProps) {
     setNewLog(contentsReplaceNewline());
   }, [contentsReplaceNewline]);
 
+  const handleImageDelete = useCallback( async () => {
+    try {
+      const attachmentRef = ref(storage, data.attachmentUrl);
+      const logsRef = doc(db, "logs", data.id);
+
+      await updateDoc(logsRef, {
+        attachmentUrl: ""
+      });
+
+      await deleteObject(attachmentRef);
+
+      setImageDeleteConfirmModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const handleLike = useCallback( async () => {
+    try {
+      const logRef = doc(db, 'logs', data.id);
+
+      if (!isLiked) {
+        await updateDoc(logRef, {
+          liked: arrayUnion(userInfo?.uid)
+        });
+      } else {
+        await updateDoc(logRef, {
+          liked: arrayRemove(userInfo?.uid)
+        })
+      }
+
+      setIsLiked(prev => !prev);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [data, isLiked, userInfo]);
+
   const newContentReplaceNewline = useCallback(() => {
     return newLog.replaceAll("\n", "<br />");
   }, [newLog]);
@@ -77,7 +168,7 @@ export default function Log({ data, isOwner }: LogProps) {
   const onSubmitUpdate = useCallback( async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const logsRef = doc(db, "logs", data.id)
+      const logsRef = doc(db, "logs", data.id);
 
       await updateDoc(logsRef, {
         content: newContentReplaceNewline()
@@ -87,7 +178,26 @@ export default function Log({ data, isOwner }: LogProps) {
     } catch (error) {
       console.log(error);
     }
-  }, [data.content, newContentReplaceNewline]);
+  }, [newContentReplaceNewline]);
+
+  const onSubmitComment = useCallback( async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      await addDoc(collection(db, "comments"), {
+        logId: data.id,
+        content: commentContent,
+        createdAt: Date.now(),
+        creatorName: userInfo?.displayName,
+        creatorId: userInfo?.uid,
+        creatorProfile: userInfo?.photoURL
+      })
+
+      setCommentContent("");
+    } catch (error) {
+      console.log(error);
+    }
+  }, [userInfo, data, commentContent]);
 
   useEffect(() => {
     if (editing) {
@@ -133,23 +243,6 @@ export default function Log({ data, isOwner }: LogProps) {
           </Info>
         </LogInfo>
         {
-          data.attachmentUrl && (
-            <Attachment>
-              <Image
-                src={data.attachmentUrl}
-                alt={data.attachmentUrl}
-                priority
-                fill
-                style={{
-                  objectFit: 'cover',
-                  width: '100%',
-                  paddingTop: '20px'
-                }}
-              />
-            </Attachment>
-          )
-        }
-        {
           editing
             ? (
               <EditForm onSubmit={onSubmitUpdate}>
@@ -180,6 +273,38 @@ export default function Log({ data, isOwner }: LogProps) {
               </EditForm>
             )
             : <Content dangerouslySetInnerHTML={{ __html: data.content }} />
+        }
+        {
+          data.attachmentUrl && (
+            <Attachment>
+              <Image
+                src={data.attachmentUrl}
+                alt={data.attachmentUrl}
+                priority
+                fill
+                style={{
+                  objectFit: 'cover',
+                  width: '100%',
+                  paddingTop: '20px'
+                }}
+              />
+              {
+                editing && (
+                  <button
+                    type="button"
+                    onClick={openImageDeleteConfirmModal}
+                  >
+                    <Image
+                      src="/image/icon/image-delete-icon.svg"
+                      alt="Image Clear"
+                      width={24}
+                      height={18}
+                    />
+                  </button>
+                )
+              }
+            </Attachment>
+          )
         }
         <MoreButton>
           <button type="button" onClick={openMoreModal}>
@@ -227,6 +352,89 @@ export default function Log({ data, isOwner }: LogProps) {
             )
           }
         </MoreButton>
+        <LogTools data-layout="logsTools">
+          <button
+            type="button"
+            onClick={handleLike}
+            style={isLiked ? { backgroundColor: $COLOR_MAIN } : {}}
+          >
+            <Image
+              src={isLiked ? "/image/icon/like-active-icon.svg" : "/image/icon/like-false-icon.svg"}
+              alt="Like false"
+              width={16}
+              height={16}
+            />
+            <span
+              style={isLiked ? { color: $COLOR_WHITE } : {}}
+            >
+              { data.liked.length }
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={openCommentList}
+            style={openComment ? { opacity: '0.2' } : {}}
+          >
+            <Image
+              src="/image/icon/comment-icon.svg"
+              alt="Comment icon"
+              width={16}
+              height={16}
+            />
+            <span>
+              { comments.length }
+            </span>
+          </button>
+        </LogTools>
+        {
+          openComment && (
+            <CommentList data-layout="commentWrapper">
+              {
+                comments.length <= 0
+                  ? (
+                    <NoComments>
+                      <Image
+                        src="/image/icon/no-comments-icon.svg"
+                        alt="No comment list"
+                        width={32}
+                        height={32}
+                      />
+                      <span>
+                        작성된 댓글이 없습니다!
+                      </span>
+                    </NoComments>
+                  )
+                  : (
+                    <>
+                      {
+                        comments.map((comment: any, i: number) => {
+                          return (
+                            <Comment key={comment.id} data={comment} />
+                          )
+                        })
+                      }
+                    </>
+                  )
+              }
+              <form
+                onSubmit={onSubmitComment}
+                data-layout="commentInput"
+              >
+                <Image
+                  src="/image/icon/no-profile-icon.svg"
+                  alt="No profile"
+                  width={32}
+                  height={32}
+                />
+                <input
+                  value={commentContent}
+                  placeholder="댓글을 입력하세요..."
+                  onChange={onChangeCommentContent}
+                />
+              </form>
+            </CommentList>
+          )
+        }
       </Wrapper>
       {
         deleteConfirmModal && (
@@ -247,6 +455,17 @@ export default function Log({ data, isOwner }: LogProps) {
             title="수정하기"
             text="정말로 로그를 수정하시겠어요?"
             buttonText="수정"
+          />
+        )
+      }
+      {
+        imageDeleteConfirmModal && (
+          <GlobalConfirmModal
+            onClick={handleImageDelete}
+            setModal={setImageDeleteConfirmModal}
+            title="삭제하기"
+            text="정말로 사진을 삭제하시겠어요?"
+            buttonText="삭제"
           />
         )
       }
