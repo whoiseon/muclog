@@ -1,7 +1,5 @@
 import {useCallback, useEffect, useState} from "react";
-import {useSelector} from "react-redux";
-
-import {User} from "@firebase/auth";
+import {useDispatch, useSelector} from "react-redux";
 
 import {collection, DocumentData, onSnapshot, orderBy, limit, query} from "@firebase/firestore";
 import {db} from "lib/firebase";
@@ -10,16 +8,23 @@ import {LogList, Wrapper} from "components/mobile/Root/styles";
 import Log from "components/mobile/Log";
 import LogSkeleton from "components/common/Skeleton/LogSkeleton";
 import WriteForm from "components/mobile/WriteForm";
-import {RootState} from "store";
+import {AppDispatch, RootState} from "store";
 
 export default function Root() {
-  const authInfo = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const userInfo = useSelector((state: RootState) => state.user);
 
   const [logs, setLogs] = useState<DocumentData[]>([]);
   const [logsLimit, setLogsLimit] = useState(20);
 
   useEffect(() => {
-    const q = query(collection(db, "logs"), orderBy("createdAt", "desc"), limit(logsLimit));
+    const q = query(
+      collection(db, "logs"),
+      orderBy("createdAt", "desc"),
+      limit(logsLimit)
+    );
+
     onSnapshot(q, (snapshot) => {
       const logArray = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -41,7 +46,7 @@ export default function Root() {
                 return <Log
                   key={log.id}
                   data={log}
-                  isOwner={log.creatorId === authInfo?.uid}
+                  isOwner={log.creatorId === userInfo?.uid}
                 />
               })
             )

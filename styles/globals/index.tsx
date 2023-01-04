@@ -246,9 +246,13 @@ const global = (theme: Theme) => css`
     background-color: ${theme.mode.mobileMenuBackground};
   }
   
-  h1[data-layout="mobile-menu-header"] {
+  div[data-layout="mobile-menu-header"] {
     background-color: ${theme.mode.mobileMenuHeaderBackground};
     border-bottom: ${theme.mode.mobileMenuHeaderBorder};
+    
+    div[data-layout="mobile-menu-profile"] {
+      border: 6px solid ${theme.mode.mobileMenuHeaderBackground};
+    }
   }
   
   ul[data-layout="mobile-menu-ul"] {
@@ -330,6 +334,12 @@ const global = (theme: Theme) => css`
     border: ${theme.mode.cardBorder};
     border-radius: 4px;
   }
+  
+  div[data-layout="mobile-menu-header-background"] {
+    background-color: ${theme.mode.mobileMenuHeaderTopBackground};
+    opacity: 0.8;
+  }
+  
 `;
 
 const GlobalStyle = () => {

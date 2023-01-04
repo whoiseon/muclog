@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import {$COLOR_RED} from "styles/variables";
+import {$BACKGROUND_COLOR_MEDIUM_BLACK, $BACKGROUND_COLOR_SEMI_BLACK, $COLOR_MAIN, $COLOR_RED} from "styles/variables";
 
 export const Wrapper = styled.div`
   position: relative;
@@ -59,38 +59,56 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const MyName = styled.h1`
+export const MyBackground = styled.div`
+  width: 100%;
+  height: 86px;
+`;
+
+export const MyProfile = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   padding: 0 20px;
   width: 100%;
-  height: 60px;
+  height: 100px;
   font-size: 16px;
   margin-bottom: 20px;
-  
-  span:nth-of-type(2) {
-    margin-left: 6px;
-    font-size: 14px;
-    opacity: 0.5;
-  }
 `;
 
 export const Profile = styled.div`
+  position: absolute;
+  top: -43px;
   margin-right: 12px;
+  border-radius: 50%;
   
   img {
     border-radius: 50%;
   }
 `;
 
+export const MyName = styled.div`
+  margin-top: 43px;
+
+  span:nth-of-type(1) {
+    font-weight: bold;
+  }
+  
+  span:nth-of-type(2) {
+    margin-left: 6px;
+    opacity: 0.5;
+  }
+`;
+
 export const CloseButton = styled.div`
   position: absolute;
-  top: 0;
-  right: 0;
-  padding: 20px;
+  top: 12px;
+  right: 12px;
+  padding: 12px;
   cursor: pointer;
-  opacity: 50%;
   transition: opacity 0.16s ease;
+  background-color: ${$BACKGROUND_COLOR_MEDIUM_BLACK};
+  opacity: 0.5;
+  border-radius: 50%;
   
   &:hover {
     opacity: 100%;

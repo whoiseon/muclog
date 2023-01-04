@@ -3,7 +3,7 @@ import Image from "next/image";
 import {DocumentData} from "@firebase/firestore";
 
 import {Content, Info, Profile, Text, Wrapper} from "components/mobile/Log/Comment/styles";
-import dayjs from "dayjs";
+import moment from "moment";
 
 interface CommentProps {
   data: DocumentData
@@ -36,7 +36,11 @@ export default function Comment({ data }: CommentProps) {
       <Content>
         <Info>
           <span>{data.creatorName}</span>
-          <span>{dayjs(data.createdAt).format("MM-DD")}</span>
+          <span>
+            {
+              moment(data.createdAt).locale('ko').fromNow()
+            }
+          </span>
         </Info>
         <Text data-layout="commentText">
           {data.content}

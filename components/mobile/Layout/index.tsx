@@ -1,9 +1,14 @@
-import {Dispatch, SetStateAction, useState} from "react";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {useDispatch} from "react-redux";
 
 import GlobalHeader from "components/mobile/Layout/GlobalHeader";
 import {Main, MenuModal} from "components/mobile/Layout/styles";
 import Menus from "components/mobile/Layout/Menus";
-import {User} from "@firebase/auth";
+import {AppDispatch} from "store";
+import {auth} from "lib/firebase";
+import {fetchUserInfoRequest} from "store/slices/user/userSlice";
+import {UserRequestParams} from "store/slices/user/type";
+import {fetchLogsRequest} from "store/slices/log/logSlice";
 
 interface LayoutProps {
   children: JSX.Element,
@@ -13,7 +18,18 @@ interface LayoutProps {
 }
 
 export default function Layout({ children, isLoggedIn, isDark, setIsDark }: LayoutProps) {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [menuActive, setMenuActive] = useState(false);
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      dispatch(fetchUserInfoRequest({
+        uid: auth.currentUser.uid,
+        email: auth.currentUser.email
+      } as UserRequestParams))
+    }
+  }, []);
 
   return isLoggedIn
     ? (

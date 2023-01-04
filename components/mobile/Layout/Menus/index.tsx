@@ -5,8 +5,8 @@ import {Dispatch, SetStateAction, useCallback, useState} from "react";
 import {
   ArrowIcon,
   CloseButton, DarkModeToggle,
-  Icon,
-  MyName, Profile,
+  Icon, MyBackground, MyName,
+  MyProfile, Profile,
   Wrapper
 } from "components/mobile/Layout/Menus/styles";
 import Image from "next/image";
@@ -54,31 +54,34 @@ export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) 
 
   return (
     <Wrapper>
-      <MyName data-layout="mobile-menu-header">
-        <Profile>
+      <MyBackground data-layout="mobile-menu-header-background" />
+      <MyProfile data-layout="mobile-menu-header">
+        <Profile data-layout="mobile-menu-profile">
           {
             userInfo?.photoURL
               ? (
                 <Image
                   src={userInfo?.photoURL}
                   alt="No profile"
-                  width={32}
-                  height={32}
+                  width={86}
+                  height={86}
                 />
               )
               : (
                 <Image
                   src="/image/icon/no-profile-icon.svg"
                   alt="No profile"
-                  width={32}
-                  height={32}
+                  width={86}
+                  height={86}
                 />
               )
           }
         </Profile>
-        <span>{ userInfo?.displayName }</span>
-        <span>{ userInfo?.email }</span>
-      </MyName>
+        <MyName>
+          <span>{ userInfo?.displayName }</span>
+          <span>{ userInfo?.email }</span>
+        </MyName>
+      </MyProfile>
       <CloseButton onClick={handleCloseMenu}>
         <Image
           src="/image/icon/dark/close-dark-icon.svg"

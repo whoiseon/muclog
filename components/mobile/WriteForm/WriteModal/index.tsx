@@ -27,7 +27,6 @@ interface WriteModalProps {
 }
 
 export default function WriteModal({ setWriteModal }: WriteModalProps) {
-  const authInfo = useSelector((state: RootState) => state.auth);
   const userInfo = useSelector((state: RootState) => state.user);
 
   const TextRef = useRef<any>(null);
@@ -73,8 +72,9 @@ export default function WriteModal({ setWriteModal }: WriteModalProps) {
         content: contentsReplaceNewline(),
         createdAt: Date.now(),
         creatorName: userInfo?.displayName,
-        creatorId: authInfo?.uid,
+        creatorId: userInfo?.uid,
         creatorProfile: userInfo?.photoURL,
+        commentCount: 0,
         attachmentUrl,
         liked: []
       });
@@ -85,7 +85,7 @@ export default function WriteModal({ setWriteModal }: WriteModalProps) {
     } catch (error) {
       console.log(error);
     }
-  }, [userInfo, authInfo, content, attachment, randomFileNameUuid]);
+  }, [userInfo, content, attachment, randomFileNameUuid]);
 
   const onFileChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const {

@@ -12,13 +12,11 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
-  collection, query, orderBy, limit, onSnapshot, where
+  collection, query, orderBy, limit, onSnapshot, where, increment, getDocs
 } from "@firebase/firestore";
-import dayjs from "dayjs";
-import {User} from "@firebase/auth";
 
 import {
-  Attachment, CommentList,
+  Attachment, CommentList, CommentMoreButton,
   Content,
   CreatedAt, EditForm, Info,
   LogInfo, LogTools,
@@ -35,6 +33,8 @@ import {$COLOR_MAIN, $COLOR_WHITE} from "styles/variables";
 import Comment from "components/mobile/Log/Comment";
 import {useSelector} from "react-redux";
 import {RootState} from "store";
+import moment from "moment";
+import "moment/locale/ko";
 
 interface LogProps {
   data: DocumentData,
@@ -42,7 +42,6 @@ interface LogProps {
 }
 
 export default function Log({ data, isOwner }: LogProps) {
-  const authInfo = useSelector((state: RootState) => state.auth);
   const userInfo = useSelector((state: RootState) => state.user);
 
   const EditTextareaRef = useRef<any>(null);
@@ -52,7 +51,7 @@ export default function Log({ data, isOwner }: LogProps) {
   const [comments, setComments] = useState<DocumentData[]>([]);
   const [commentsLimit, setCommentsLimit] = useState(5)
 
-  const [isLiked, setIsLiked] = useState<boolean>(data.liked.includes(authInfo?.uid));
+  const [isLiked, setIsLiked] = useState<boolean>(data.liked.includes(userInfo?.uid));
   const [editing, setEditing] = useState(false);
   const [openComment, setOpenComment] = useState(false);
 
@@ -70,7 +69,7 @@ export default function Log({ data, isOwner }: LogProps) {
   useEffect(() => {
     const q = query(
       collection(db, "comments"),
-      where("logId", "==", `${data.id}`),
+      where("logId", "==", data.id),
       orderBy("createdAt", "desc"),
       limit(commentsLimit)
     );
@@ -83,7 +82,7 @@ export default function Log({ data, isOwner }: LogProps) {
 
       setComments(commentArray);
     })
-  }, [openComment]);
+  }, [openComment, commentsLimit]);
 
   const openDeleteConfirmModal = useCallback(() => {
     setDeleteConfirmModal(true);
@@ -107,12 +106,28 @@ export default function Log({ data, isOwner }: LogProps) {
 
   const handleDeleteLog = useCallback( async () => {
     try {
-      await deleteDoc(doc(db, "logs", data.id));
+      const logRef = doc(db, "logs", data.id)
+
+      await deleteDoc(logRef);
 
       if (data.attachmentUrl !== "") {
         const attachmentRef = ref(storage, data.attachmentUrl);
         await deleteObject(attachmentRef);
       }
+
+      const q = query(
+        collection(db, "comments"),
+        where("logId", "==", data.id)
+      )
+
+      const deleteComments = await getDocs(q);
+
+      if (deleteComments.docs.length !== 0) {
+        await deleteComments.forEach((doc) => {
+          deleteDoc(doc.ref);
+        })
+      }
+
     } catch (error) {
       console.log(error);
     }
@@ -151,11 +166,11 @@ export default function Log({ data, isOwner }: LogProps) {
 
       if (!isLiked) {
         await updateDoc(logRef, {
-          liked: arrayUnion(authInfo?.uid)
+          liked: arrayUnion(userInfo?.uid)
         });
       } else {
         await updateDoc(logRef, {
-          liked: arrayRemove(authInfo?.uid)
+          liked: arrayRemove(userInfo?.uid)
         })
       }
 
@@ -163,7 +178,11 @@ export default function Log({ data, isOwner }: LogProps) {
     } catch (error) {
       console.log(error);
     }
-  }, [data, isLiked, authInfo]);
+  }, [data, isLiked, userInfo]);
+
+  const handleCommentLimitIncrement = useCallback(() => {
+    setCommentsLimit((prev) => prev + 5);
+  }, []);
 
   const newContentReplaceNewline = useCallback(() => {
     return newLog.replaceAll("\n", "<br />");
@@ -172,9 +191,9 @@ export default function Log({ data, isOwner }: LogProps) {
   const onSubmitUpdate = useCallback( async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const logsRef = doc(db, "logs", data.id);
+      const logRef = doc(db, "logs", data.id);
 
-      await updateDoc(logsRef, {
+      await updateDoc(logRef, {
         content: newContentReplaceNewline()
       })
 
@@ -188,20 +207,26 @@ export default function Log({ data, isOwner }: LogProps) {
     event.preventDefault();
 
     try {
+      const logRef = doc(db, "logs", data.id);
+
       await addDoc(collection(db, "comments"), {
         logId: data.id,
         content: commentContent,
         createdAt: Date.now(),
         creatorName: userInfo?.displayName,
-        creatorId: authInfo?.uid,
+        creatorId: userInfo?.uid,
         creatorProfile: userInfo?.photoURL
       })
+
+      await updateDoc(logRef, {
+        commentCount: increment(1),
+      });
 
       setCommentContent("");
     } catch (error) {
       console.log(error);
     }
-  }, [userInfo, authInfo, data, commentContent]);
+  }, [userInfo, data, commentContent]);
 
   useEffect(() => {
     if (editing) {
@@ -242,7 +267,11 @@ export default function Log({ data, isOwner }: LogProps) {
               <p>{ data.creatorName }</p>
             </UserName>
             <CreatedAt>
-              <p>{ dayjs(data.createdAt).format("MM-DD") }</p>
+              <p>
+                {
+                  moment(data.createdAt).locale('ko').fromNow()
+                }
+              </p>
             </CreatedAt>
           </Info>
         </LogInfo>
@@ -386,7 +415,7 @@ export default function Log({ data, isOwner }: LogProps) {
               height={16}
             />
             <span>
-              { comments.length }
+              { data.commentCount }
             </span>
           </button>
         </LogTools>
@@ -416,6 +445,18 @@ export default function Log({ data, isOwner }: LogProps) {
                             <Comment key={comment.id} data={comment} />
                           )
                         })
+                      }
+                      {
+                        data.commentCount > commentsLimit && (
+                          <CommentMoreButton>
+                            <button
+                              type="button"
+                              onClick={handleCommentLimitIncrement}
+                            >
+                              <span>더 많은 코멘트를 보고싶어요!</span>
+                            </button>
+                          </CommentMoreButton>
+                        )
                       }
                     </>
                   )

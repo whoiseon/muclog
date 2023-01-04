@@ -21,14 +21,14 @@ import {
 
 import {SocialIcon, SocialLogin} from "components/pc/Auth/styles";
 import Animation from "components/common/Animation";
-import {fetchLoginRequest, fetchSignUpRequest} from "store/slices/auth/authSlice";
+import {fetchLoginRequest, fetchSignUpRequest} from "store/slices/user/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "store";
 
 export default function Auth() {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { signUpError, loginError } = useSelector((state: RootState) => state.auth);
+  const { signUpError, loginError } = useSelector((state: RootState) => state.user);
 
   const [newAccount, setNewAccount] = useState(false);
 
@@ -113,7 +113,7 @@ export default function Auth() {
                 <div>
                   <button
                     type="button"
-                    name="google"
+                    name="Google"
                     onClick={onSocialClick}
                   >
                     <SocialIcon>
@@ -127,7 +127,7 @@ export default function Auth() {
                   </button>
                   <button
                     type="button"
-                    name="github"
+                    name="Github"
                     onClick={onSocialClick}
                   >
                     <SocialIcon>

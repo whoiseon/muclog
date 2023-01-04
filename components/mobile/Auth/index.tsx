@@ -19,12 +19,12 @@ import {
 import Image from "next/image";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "store";
-import {fetchLoginRequest, fetchLoginWithSocial, fetchSignUpRequest} from "store/slices/auth/authSlice";
+import {fetchLoginRequest, fetchLoginWithSocial, fetchSignUpRequest} from "store/slices/user/userSlice";
 
 export default function Auth() {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { signUpError, loginError } = useSelector((state: RootState) => state.auth);
+  const { signUpError, loginError } = useSelector((state: RootState) => state.user);
 
   const [newAccount, setNewAccount] = useState(false);
 
