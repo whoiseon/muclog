@@ -70,9 +70,10 @@ export const MyProfile = styled.div`
   align-items: center;
   padding: 0 20px;
   width: 100%;
-  height: 100px;
+  height: 140px;
   font-size: 16px;
   margin-bottom: 20px;
+  cursor: pointer;
 `;
 
 export const Profile = styled.div`
@@ -89,12 +90,12 @@ export const Profile = styled.div`
 export const MyName = styled.div`
   margin-top: 43px;
 
-  span:nth-of-type(1) {
+  p:nth-of-type(1) {
     font-weight: bold;
+    margin-bottom: 6px;
   }
   
-  span:nth-of-type(2) {
-    margin-left: 6px;
+  p:nth-of-type(2) {
     opacity: 0.5;
   }
 `;

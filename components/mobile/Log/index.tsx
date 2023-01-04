@@ -35,6 +35,9 @@ import {useSelector} from "react-redux";
 import {RootState} from "store";
 import moment from "moment";
 import "moment/locale/ko";
+import ImageViewModal from "components/mobile/Log/ImageViewModal";
+import {router} from "next/client";
+import {useRouter} from "next/router";
 
 interface LogProps {
   data: DocumentData,
@@ -42,6 +45,8 @@ interface LogProps {
 }
 
 export default function Log({ data, isOwner }: LogProps) {
+  const router = useRouter();
+
   const userInfo = useSelector((state: RootState) => state.user);
 
   const EditTextareaRef = useRef<any>(null);
@@ -54,6 +59,7 @@ export default function Log({ data, isOwner }: LogProps) {
   const [isLiked, setIsLiked] = useState<boolean>(data.liked.includes(userInfo?.uid));
   const [editing, setEditing] = useState(false);
   const [openComment, setOpenComment] = useState(false);
+  const [openImageView, setOpenImageView] = useState(false);
 
   const contentsReplaceNewline = useCallback(() => {
     return data.content.replaceAll("<br />", "\n");
@@ -102,6 +108,10 @@ export default function Log({ data, isOwner }: LogProps) {
 
   const openCommentList = useCallback(() => {
     setOpenComment(prev => !prev);
+  }, []);
+
+  const openImageViewModal = useCallback(() => {
+    setOpenImageView(true);
   }, []);
 
   const handleDeleteLog = useCallback( async () => {
@@ -159,6 +169,18 @@ export default function Log({ data, isOwner }: LogProps) {
       console.log(error);
     }
   }, []);
+
+  const handleMoveUserFeed = (uid: string) => () => {
+    router.push(`/feed/${uid}`);
+  };
+
+  useEffect(() => {
+    if (openImageView) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [openImageView]);
 
   const handleLike = useCallback( async () => {
     try {
@@ -241,12 +263,12 @@ export default function Log({ data, isOwner }: LogProps) {
     <>
       <Wrapper data-layout="logs">
         <LogInfo>
-          <Profile>
+          <Profile onClick={handleMoveUserFeed(data.creatorId)}>
             {
               data.creatorProfile
                 ? (
                   <Image
-                    src="/image/icon/no-profile-icon.svg"
+                    src={data.creatorProfile}
                     alt="No profile"
                     width={36}
                     height={36}
@@ -263,7 +285,7 @@ export default function Log({ data, isOwner }: LogProps) {
             }
           </Profile>
           <Info>
-            <UserName>
+            <UserName onClick={handleMoveUserFeed(data.creatorId)}>
               <p>{ data.creatorName }</p>
             </UserName>
             <CreatedAt>
@@ -315,11 +337,7 @@ export default function Log({ data, isOwner }: LogProps) {
                 alt={data.attachmentUrl}
                 priority
                 fill
-                style={{
-                  objectFit: 'cover',
-                  width: '100%',
-                  paddingTop: '20px'
-                }}
+                onClick={openImageViewModal}
               />
               {
                 editing && (
@@ -465,12 +483,25 @@ export default function Log({ data, isOwner }: LogProps) {
                 onSubmit={onSubmitComment}
                 data-layout="commentInput"
               >
-                <Image
-                  src="/image/icon/no-profile-icon.svg"
-                  alt="No profile"
-                  width={32}
-                  height={32}
-                />
+                {
+                  userInfo?.photoURL
+                    ? (
+                      <Image
+                        src={userInfo?.photoURL}
+                        alt="profile"
+                        width={32}
+                        height={32}
+                      />
+                    )
+                    : (
+                      <Image
+                        src="/image/icon/no-profile-icon.svg"
+                        alt="No profile"
+                        width={32}
+                        height={32}
+                      />
+                    )
+                }
                 <input
                   value={commentContent}
                   placeholder="댓글을 입력하세요..."
@@ -511,6 +542,14 @@ export default function Log({ data, isOwner }: LogProps) {
             title="삭제하기"
             text="정말로 사진을 삭제하시겠어요?"
             buttonText="삭제"
+          />
+        )
+      }
+      {
+        openImageView && (
+          <ImageViewModal
+            data={data}
+            setOpenImageView={setOpenImageView}
           />
         )
       }

@@ -17,7 +17,7 @@ export default function Comment({ data }: CommentProps) {
           data.creatorProfile
             ? (
               <Image
-                src="/image/icon/no-profile-icon.svg"
+                src={data.creatorProfile}
                 alt="No profile"
                 width={32}
                 height={32}

@@ -15,6 +15,11 @@ export const LogInfo = styled.div`
 
 export const Profile = styled.div`
   margin-right: 12px;
+  cursor: pointer;
+  
+  img {
+    border-radius: 50%;
+  }
 `;
 
 export const Info = styled.div`
@@ -23,6 +28,7 @@ export const Info = styled.div`
 
 export const UserName = styled.div`
   margin-bottom: 2px;
+  cursor: pointer;
   
   p {
     font-weight: bold;
@@ -39,7 +45,13 @@ export const Attachment = styled.div`
   position: relative;
   width: 100%;
   height: 300px;
-
+  
+  img {
+    width: 100%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  
   button {
     position: absolute;
     top: 20px;
@@ -135,6 +147,7 @@ export const CommentList = styled.div`
     
     img {
       margin-right: 14px;
+      border-radius: 50%;
     }
     
     input {

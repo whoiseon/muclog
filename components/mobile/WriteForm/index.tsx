@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import Image from "next/image";
 import {useSelector} from "react-redux";
+import {useRouter} from "next/router";
 
 import {
   ModalWrapper,
@@ -10,6 +11,8 @@ import WriteModal from "components/mobile/WriteForm/WriteModal";
 import {RootState} from "store";
 
 export default function WriteForm() {
+  const router = useRouter();
+
   const userInfo = useSelector((state: RootState) => state.user);
 
   const [writeModal, setWriteModal] = useState(false);

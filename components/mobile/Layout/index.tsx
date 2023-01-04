@@ -8,7 +8,6 @@ import {AppDispatch} from "store";
 import {auth} from "lib/firebase";
 import {fetchUserInfoRequest} from "store/slices/user/userSlice";
 import {UserRequestParams} from "store/slices/user/type";
-import {fetchLogsRequest} from "store/slices/log/logSlice";
 
 interface LayoutProps {
   children: JSX.Element,

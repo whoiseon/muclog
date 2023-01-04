@@ -38,6 +38,11 @@ export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) 
     setLogoutConfirmModal(true);
   }, []);
 
+  const handleMoveMyFeed = useCallback(() => {
+    router.push(`/feed/${userInfo?.uid}`);
+    setMenuActive(false);
+  }, [userInfo]);
+
   const handleCloseMenu = useCallback(() => {
     setMenuActive(false);
   }, []);
@@ -55,7 +60,10 @@ export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) 
   return (
     <Wrapper>
       <MyBackground data-layout="mobile-menu-header-background" />
-      <MyProfile data-layout="mobile-menu-header">
+      <MyProfile
+        data-layout="mobile-menu-header"
+        onClick={handleMoveMyFeed}
+      >
         <Profile data-layout="mobile-menu-profile">
           {
             userInfo?.photoURL
@@ -78,8 +86,8 @@ export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) 
           }
         </Profile>
         <MyName>
-          <span>{ userInfo?.displayName }</span>
-          <span>{ userInfo?.email }</span>
+          <p>{ userInfo?.displayName }</p>
+          <p>{ userInfo?.email }</p>
         </MyName>
       </MyProfile>
       <CloseButton onClick={handleCloseMenu}>
@@ -140,7 +148,7 @@ export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) 
           </Link>
         </li>
         <li>
-          <Link href="/profile" onClick={onClickMovePage}>
+          <Link href={`/feed/${userInfo?.uid}`} onClick={onClickMovePage}>
             <div>
               <Icon>
                 <Image

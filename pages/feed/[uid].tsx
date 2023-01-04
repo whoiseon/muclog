@@ -1,21 +1,25 @@
 import {useCallback} from "react";
 import Head from 'next/head';
 
-import MobileProfile from "components/mobile/Profile";
+import MobileUserFeed from "components/mobile/Feed";
 import MobileAuth from "components/mobile/Auth";
 import PCProfile from "components/pc/Profile";
 import PCAuth from "components/pc/Auth";
+import {useSelector} from "react-redux";
+import {RootState} from "store";
 
 interface HomeProps {
   isLoggedIn: boolean,
   isMobile: boolean,
 }
 
-export default function Home({ isLoggedIn, isMobile }: HomeProps) {
+export default function Uid({ isLoggedIn, isMobile }: HomeProps) {
+  const { displayName } = useSelector((state: RootState) => state.user);
+
   const handleMobileDetect = useCallback(() => {
     if (isMobile) {
       if (isLoggedIn) {
-        return <MobileProfile />
+        return <MobileUserFeed />
       } else {
         return <MobileAuth />
       }
@@ -31,7 +35,7 @@ export default function Home({ isLoggedIn, isMobile }: HomeProps) {
   return (
     <>
       <Head>
-        <title>Muclog</title>
+        <title>Muclog - {displayName} 님의 피드</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {

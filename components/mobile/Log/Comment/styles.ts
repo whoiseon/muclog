@@ -7,6 +7,10 @@ export const Wrapper = styled.div`
 
 export const Profile = styled.div`
   margin-right: 12px;
+  
+  img {
+    border-radius: 50%;
+  }
 `;
 
 export const Content = styled.div`
