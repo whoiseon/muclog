@@ -159,6 +159,10 @@ const global = (theme: Theme) => css`
     }
   }
   
+  button[data-layout="profile-photo-change-button"] {
+    border: 4px solid ${theme.mode.mobileMenuHeaderBackground};
+  }
+  
   button {
     border: 0;
     border-radius: ${$BORDER_RADIUS};

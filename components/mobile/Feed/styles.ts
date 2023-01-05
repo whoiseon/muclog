@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import {$COLOR_GRAY} from "styles/variables";
 
 export const Wrapper = styled.div`
 
@@ -29,17 +30,33 @@ export const Profile = styled.div`
   img {
     border-radius: 50%;
   }
+  
+  button {
+    position: absolute;
+    bottom: -6px;
+    right: -6px;
+    background-color: ${$COLOR_GRAY};
+    padding: 6px;
+    border-radius: 50%;
+    
+    img {
+      border-radius: 0;
+      padding-bottom: 2px;
+      width: auto;
+      height: auto;
+    }
+  }
 `;
 
 export const MyName = styled.div`
   margin-top: 43px;
 
-  p:nth-of-type(1) {
+  div:nth-of-type(1) {
     font-weight: bold;
     margin-bottom: 6px;
   }
   
-  p:nth-of-type(2) {
+  div:nth-of-type(2) {
     opacity: 0.5;
   }
 `;

@@ -3,6 +3,7 @@ import {$BACKGROUND_COLOR_MEDIUM_BLACK} from "styles/variables";
 
 export const Main = styled.main`
   width: 100%;
+  height: 100%;
   padding-top: 60px;
 `;
 

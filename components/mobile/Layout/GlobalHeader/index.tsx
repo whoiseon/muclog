@@ -35,6 +35,7 @@ export default function GlobalHeader({ setMenuActive }: GlobalHeaderProps) {
           <Image
             src="/image/logo/logo.svg"
             alt="Logo"
+            priority
             width={46}
             height={24}
           />
