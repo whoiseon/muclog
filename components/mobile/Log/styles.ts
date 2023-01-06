@@ -19,6 +19,7 @@ export const Profile = styled.div`
   
   img {
     border-radius: 50%;
+    object-fit: cover;
   }
 `;
 
@@ -81,7 +82,6 @@ export const MoreButton = styled.div`
     background: none;
     padding: 16px 22px;
     opacity: 0.3;
-    transform: rotate(90deg);
     
     &:hover {
       opacity: 1;

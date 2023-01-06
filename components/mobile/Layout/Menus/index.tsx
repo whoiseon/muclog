@@ -59,7 +59,9 @@ export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) 
 
   return (
     <Wrapper>
-      <MyBackground data-layout="mobile-menu-header-background" />
+      <MyBackground
+        profileColor={userInfo?.profileColor}
+      />
       <MyProfile
         data-layout="mobile-menu-header"
         onClick={handleMoveMyFeed}

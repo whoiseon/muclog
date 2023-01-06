@@ -197,6 +197,12 @@ const global = (theme: Theme) => css`
     text-decoration: none
   }
   
+  input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  
   input:-webkit-autofill {
     -webkit-box-shadow:0 0 0 1000px #ffffff75 inset;
   }
@@ -253,10 +259,14 @@ const global = (theme: Theme) => css`
   div[data-layout="mobile-menu-header"] {
     background-color: ${theme.mode.mobileMenuHeaderBackground};
     border-bottom: ${theme.mode.mobileMenuHeaderBorder};
-    
-    div[data-layout="mobile-menu-profile"] {
-      border: 6px solid ${theme.mode.mobileMenuHeaderBackground};
-    }
+  }
+
+  div[data-layout="mobile-menu-profile"] {
+    border: 6px solid ${theme.mode.feedProfileBackground};
+  }
+  
+  div[data-layout="mobile-feed-profile"] {
+    background-color: ${theme.mode.feedProfileBackground};
   }
   
   ul[data-layout="mobile-menu-ul"] {
@@ -339,11 +349,10 @@ const global = (theme: Theme) => css`
     border-radius: 4px;
   }
   
-  div[data-layout="mobile-menu-header-background"] {
-    background-color: ${theme.mode.mobileMenuHeaderTopBackground};
-    opacity: 0.8;
+  label[data-layout="profile-photo-picker"] {
+    background-color: ${theme.mode.mobileMenuHeaderBackground};
+    border-radius: 4px;
   }
-  
 `;
 
 const GlobalStyle = () => {

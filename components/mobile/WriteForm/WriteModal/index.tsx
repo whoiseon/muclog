@@ -185,7 +185,12 @@ export default function WriteModal({ setWriteModal }: WriteModalProps) {
                 </div>
                 <span>사진 추가하기</span>
               </label>
-              <input type="file" id="picture_upload" onChange={onFileChange} />
+              <input
+                type="file"
+                id="picture_upload"
+                accept="image/*"
+                onChange={onFileChange}
+              />
             </PictureBox>
           </li>
         </ul>

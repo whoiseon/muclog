@@ -1,10 +1,9 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {auth} from "lib/firebase";
-import {db} from "lib/firebase";
+import {db, auth, storage} from "lib/firebase";
 
 import {
-  LoginRequestParams,
+  LoginRequestParams, ProfileColorUpdateParams, ProfileImageUpdateParams,
   SignUpRequestParams,
   SocialLoginRequestParams,
   UserRequestParams,
@@ -17,11 +16,16 @@ import {
   signInWithEmailAndPassword, signInWithPopup,
   updateProfile
 } from "@firebase/auth";
+import {getDownloadURL, ref, uploadString} from "@firebase/storage";
+
+import {v4 as randomFileNameUuid} from "uuid";
+import {$COLOR_MAIN} from "styles/variables";
 
 const initialState: userState = {
   uid: null,
   email: null,
   displayName: null,
+  profileColor: null,
   photoURL: null,
   type: null,
   loginLoading: false,
@@ -33,6 +37,12 @@ const initialState: userState = {
   fetchUserInfoLoading: false,
   fetchUserInfoSuccess: false,
   fetchUserInfoError: null,
+  updateProfileColorLoading: false,
+  updateProfileColorSuccess: false,
+  updateProfileColorError: null,
+  updateProfileImageLoading: false,
+  updateProfileImageSuccess: false,
+  updateProfileImageError: null
 }
 
 export const fetchSignUpRequest = createAsyncThunk(
@@ -56,6 +66,7 @@ export const fetchSignUpRequest = createAsyncThunk(
         type: "email",
         email,
         displayName: name,
+        profileColor: $COLOR_MAIN,
         photoURL: credential.user.photoURL,
       });
 
@@ -69,6 +80,7 @@ export const fetchSignUpRequest = createAsyncThunk(
         email,
         displayName: name,
         photoURL: credential.user.photoURL,
+        profileColor: $COLOR_MAIN,
         type: "email"
       }
     } catch (error: any) {
@@ -154,6 +166,7 @@ export const fetchLoginWithSocial = createAsyncThunk(
           type: `${name} Auth`,
           email: credential.user.email,
           displayName: credential.user.displayName,
+          profileColor: $COLOR_MAIN,
           photoURL: credential.user.photoURL,
         });
       }
@@ -197,6 +210,7 @@ export const fetchUserInfoRequest = createAsyncThunk(
           email,
           displayName: data.displayName,
           photoURL: data.photoURL,
+          profileColor: data.profileColor,
           type: data.type
         }
       } else {
@@ -205,6 +219,7 @@ export const fetchUserInfoRequest = createAsyncThunk(
           email: null,
           displayName: null,
           photoURL: null,
+          profileColor: null,
           type: null
         }
       }
@@ -212,7 +227,48 @@ export const fetchUserInfoRequest = createAsyncThunk(
       throw rejectWithValue("유저 정보 요청 실패");
     }
   }
-)
+);
+
+export const updateProfileColor = createAsyncThunk(
+  "user/UPDATE_PROFILE_COLOR",
+  async ({ uid, color }: ProfileColorUpdateParams, { rejectWithValue }) => {
+    try {
+      const userRef = doc(db, 'Users', uid);
+
+      await updateDoc(userRef, {
+        profileColor: color,
+      });
+
+      return color
+    } catch (error) {
+      throw rejectWithValue("유저 정보 요청 실패");
+    }
+  }
+);
+
+export const updateProfileImage = createAsyncThunk(
+  "user/UPDATE_PROFILE_IMAGE",
+  async ({ uid, email, image }: ProfileImageUpdateParams, { rejectWithValue }) => {
+    try {
+      let attachmentUrl = "";
+
+      const attachmentRef = ref(storage, `${email}/profile/${randomFileNameUuid()}`);
+      const response = await uploadString(attachmentRef, image, "data_url");
+
+      attachmentUrl = await getDownloadURL(response.ref);
+
+      const userRef = doc(db, 'Users', uid);
+
+      await updateDoc(userRef, {
+        photoURL: attachmentUrl,
+      });
+
+      return attachmentUrl
+    } catch (error) {
+      throw rejectWithValue("유저 정보 요청 실패");
+    }
+  }
+);
 
 export const userSlice = createSlice({
   name: 'user',
@@ -230,6 +286,7 @@ export const userSlice = createSlice({
         state.signUpLoading = false;
         state.signUpSuccess = true;
         state.displayName = action.payload.displayName;
+        state.profileColor = action.payload.profileColor;
         state.email = action.payload.email;
         state.uid = action.payload.uid;
         state.type = action.payload.type;
@@ -240,6 +297,7 @@ export const userSlice = createSlice({
         state.signUpSuccess = false;
         state.signUpError = action.payload as string;
         state.displayName = null;
+        state.profileColor = null;
         state.email = null;
         state.uid = null;
         state.type = null;
@@ -307,6 +365,7 @@ export const userSlice = createSlice({
         state.uid = action.payload.uid;
         state.email = action.payload.email;
         state.displayName = action.payload.displayName;
+        state.profileColor = action.payload.profileColor;
         state.photoURL = action.payload.photoURL;
         state.type = action.payload.type;
       })
@@ -318,7 +377,40 @@ export const userSlice = createSlice({
         state.email = null;
         state.photoURL = null;
         state.displayName = null;
+        state.profileColor = null;
         state.type = null;
+      })
+      .addCase(updateProfileColor.pending, (state) => {
+        state.updateProfileColorSuccess = false;
+        state.updateProfileColorLoading = true;
+        state.updateProfileColorError = null;
+      })
+      .addCase(updateProfileColor.fulfilled, (state, action) => {
+        state.updateProfileColorLoading = false;
+        state.updateProfileColorSuccess = true;
+        state.updateProfileColorError = null;
+        state.profileColor = action.payload;
+      })
+      .addCase(updateProfileColor.rejected, (state, action) => {
+        state.updateProfileColorLoading = false;
+        state.updateProfileColorSuccess = false;
+        state.updateProfileColorError = action.payload as string;
+      })
+      .addCase(updateProfileImage.pending, (state) => {
+        state.updateProfileImageSuccess = false;
+        state.updateProfileImageLoading = true;
+        state.updateProfileImageError = null;
+      })
+      .addCase(updateProfileImage.fulfilled, (state, action) => {
+        state.updateProfileImageLoading = false;
+        state.updateProfileImageSuccess = true;
+        state.updateProfileImageError = null;
+        state.photoURL = action.payload;
+      })
+      .addCase(updateProfileImage.rejected, (state, action) => {
+        state.updateProfileImageLoading = false;
+        state.updateProfileImageSuccess = false;
+        state.updateProfileImageError = action.payload as string;
       })
   )
 });

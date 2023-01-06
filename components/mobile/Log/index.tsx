@@ -362,8 +362,8 @@ export default function Log({ data, isOwner }: LogProps) {
             <Image
               src="/image/icon/log-more-icon.svg"
               alt="More"
-              width={5}
-              height={18}
+              width={18}
+              height={5}
             />
           </button>
           {

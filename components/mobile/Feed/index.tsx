@@ -1,28 +1,58 @@
 import {useRouter} from "next/router";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Image from "next/image";
 
-import {MyBackground, MyName, MyProfile, Profile, Wrapper} from "components/mobile/Feed/styles";
-import {RootState} from "store";
-import {useCallback, useEffect, useState} from "react";
-import {collection, doc, DocumentData, getDoc, limit, onSnapshot, orderBy, query, where} from "@firebase/firestore";
-import {db} from "lib/firebase";
+import {
+  ColorInputWrapper,
+  MyBackground,
+  MyName,
+  MyProfile,
+  PhotoChangeWrapper,
+  Profile,
+  Wrapper
+} from "components/mobile/Feed/styles";
+import {AppDispatch, RootState} from "store";
+import {ChangeEvent, useCallback, useEffect, useState} from "react";
+import {
+  collection,
+  doc,
+  DocumentData,
+  getDoc,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+  where
+} from "@firebase/firestore";
+import {db, storage} from "lib/firebase";
 import WriteForm from "components/mobile/WriteForm";
 import Log from "components/mobile/Log";
 import LogSkeleton from "components/common/Skeleton/LogSkeleton";
 import Loading from "components/common/Loading";
+import GlobalUpdateModal from "components/common/GlobalUpdateModal";
+import {updateProfileColor, updateProfileImage} from "store/slices/user/userSlice";
+import {getDownloadURL, ref, uploadString} from "@firebase/storage";
+import {v4 as randomFileNameUuid} from "uuid";
+import {ProfileImageUpdateParams} from "store/slices/user/type";
 
 export default function Feed() {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
 
   const myInfo = useSelector((state: RootState) => state.user);
 
   const [myLogsLimit, setMyLogsLimit] = useState(20);
   const [myLogs, setMyLogs] = useState<DocumentData[]>([]);
   const [userInfo, setUserInfo] = useState<any>(null);
+  const [attachment, setAttachment] = useState("");
 
   const [isMyFeed, setIsMyFeed] = useState(myInfo?.uid === router.query.uid);
   const [loading, setLoading] = useState(true);
+  const [profileColor, setProfileColor] = useState("");
+
+  const [backgroundUpdateModal, setBackgroundUpdateModal] = useState(false);
+  const [photoUpdateModal, setPhotoUpdateModal] = useState(false);
 
   const getUserInfo = useCallback( async () => {
     const userCollection = doc(db, "Users", `${router.query.uid}`);
@@ -55,11 +85,69 @@ export default function Feed() {
 
   useEffect(() => {
     setIsMyFeed(myInfo?.uid === router.query.uid);
+    setProfileColor(userInfo?.profileColor);
 
     if (userInfo) {
       setLoading(false);
     }
   }, [userInfo, myInfo, router.query.uid]);
+
+  const onChangeProfileColor = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setProfileColor(event.target.value);
+  }, []);
+
+  const openBackgroundUpdateModal = useCallback(() => {
+    setBackgroundUpdateModal(true);
+  }, []);
+
+  const handleUpdateProfileColor = useCallback(() => {
+    if (profileColor !== userInfo?.profileColor) {
+      dispatch(updateProfileColor({
+        uid: userInfo?.uid,
+        color: profileColor
+      }))
+    }
+
+    getUserInfo();
+    setBackgroundUpdateModal(false);
+  }, [userInfo, profileColor, getUserInfo]);
+
+  const handleResetProfileColor = useCallback(() => {
+    setProfileColor(userInfo?.profileColor)
+  }, [userInfo?.profileColor]);
+
+  const onFileChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { files },
+    } = event;
+
+    const theFile: any = files && files[0];
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent: any) => {
+      const {
+        currentTarget: { result }
+      } = finishedEvent;
+      setAttachment(result)
+    }
+    reader.readAsDataURL(theFile);
+  }, []);
+
+  const openPhotoUpdateModal = useCallback(() => {
+    setPhotoUpdateModal(true);
+  }, []);
+
+  const handleUpdatePhoto = useCallback( async () => {
+    if (attachment && !(attachment === myInfo?.photoURL)) {
+      await dispatch(updateProfileImage({
+        uid: myInfo?.uid,
+        email: myInfo?.email,
+        image: attachment
+      } as ProfileImageUpdateParams));
+    }
+
+    getUserInfo();
+    setPhotoUpdateModal(false);
+  }, [attachment, myInfo, getUserInfo]);
 
   return (
     <>
@@ -67,9 +155,28 @@ export default function Feed() {
         !loading
           ? (
             <Wrapper>
-              <MyBackground data-layout="mobile-menu-header-background" />
+              <MyBackground
+                style={{
+                  backgroundColor: userInfo?.profileColor
+                }}
+              >
+                {
+                  isMyFeed && (
+                    <button
+                      onClick={openBackgroundUpdateModal}
+                    >
+                      <Image
+                        src="/image/icon/brush-icon.svg"
+                        alt="Photo"
+                        width={20}
+                        height={20}
+                      />
+                    </button>
+                  )
+                }
+              </MyBackground>
               <MyProfile
-                data-layout="mobile-menu-header"
+                data-layout="mobile-feed-profile"
               >
                 <Profile data-layout="mobile-menu-profile">
                   {
@@ -95,7 +202,10 @@ export default function Feed() {
                   }
                   {
                     isMyFeed && (
-                      <button data-layout="profile-photo-change-button">
+                      <button
+                        onClick={openPhotoUpdateModal}
+                        data-layout="profile-photo-change-button"
+                      >
                         <Image
                           src="/image/icon/photo-icon.svg"
                           alt="Photo"
@@ -145,6 +255,77 @@ export default function Feed() {
             </Wrapper>
           )
           : <Loading />
+      }
+      {
+        backgroundUpdateModal && (
+          <GlobalUpdateModal
+            onClick={handleUpdateProfileColor}
+            setModal={setBackgroundUpdateModal}
+            title="프로필 색상 변경"
+            buttonText="변경"
+          >
+            <ColorInputWrapper>
+              <p>변경할 색상</p>
+              <input
+                type="color"
+                value={profileColor}
+                onChange={onChangeProfileColor}
+              />
+              {
+                profileColor !== userInfo?.profileColor && (
+                  <>
+                    <p>현재 적용된 색상</p>
+                    <div
+                      onClick={handleResetProfileColor}
+                      style={{
+                        backgroundColor: userInfo?.profileColor
+                      }}
+                    />
+                  </>
+                )
+              }
+            </ColorInputWrapper>
+          </GlobalUpdateModal>
+        )
+      }
+      {
+        photoUpdateModal && (
+          <GlobalUpdateModal
+            onClick={handleUpdatePhoto}
+            setModal={setPhotoUpdateModal}
+            title="프로필 사진 변경"
+            buttonText="변경"
+          >
+            <PhotoChangeWrapper>
+              <div>
+                <label
+                  data-layout="profile-photo-picker"
+                  htmlFor="profile_upload"
+                >
+                  {
+                    attachment
+                      ? (
+                        <Image
+                          src={attachment}
+                          alt="photo preview"
+                          fill
+                        />
+                      )
+                      : (
+                        <span>사진을 선택해주세요</span>
+                      )
+                  }
+                </label>
+                <input
+                  type="file"
+                  id="profile_upload"
+                  accept="image/*"
+                  onChange={onFileChange}
+                />
+              </div>
+            </PhotoChangeWrapper>
+          </GlobalUpdateModal>
+        )
       }
     </>
   );

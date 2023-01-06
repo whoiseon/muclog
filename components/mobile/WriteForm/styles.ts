@@ -14,6 +14,7 @@ export const Wrapper = styled.div`
     & > div {
       img {
         border-radius: 50%;
+        object-fit: cover;
       }
     }
   }

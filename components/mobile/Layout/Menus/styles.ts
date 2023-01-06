@@ -59,9 +59,10 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const MyBackground = styled.div`
+export const MyBackground = styled.div<{ profileColor: string | null  }>`
   width: 100%;
-  height: 86px;
+  height: 146px;
+  background-color: ${({ profileColor }) => profileColor};
 `;
 
 export const MyProfile = styled.div`
@@ -84,6 +85,7 @@ export const Profile = styled.div`
   
   img {
     border-radius: 50%;
+    object-fit: cover;
   }
 `;
 
