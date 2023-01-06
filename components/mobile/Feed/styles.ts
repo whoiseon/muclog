@@ -12,7 +12,7 @@ export const MyBackground = styled.div`
   
   button {
     position: absolute;
-    top: 10px;
+    bottom: 10px;
     right: 10px;
     background-color: ${$BACKGROUND_COLOR_WHITE};
     padding: 8px;
@@ -68,8 +68,22 @@ export const MyName = styled.div`
   margin-top: 43px;
 
   div:nth-of-type(1) {
+    display: flex;
+    align-items: center;
     font-weight: bold;
     margin-bottom: 6px;
+    
+    button {
+      display: flex;
+      padding: 6px 6px 7px;
+      background: none;
+      margin-left: 2px;
+      opacity: 0.5;
+      
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
   
   div:nth-of-type(2) {
@@ -139,5 +153,14 @@ export const PhotoChangeWrapper = styled.div`
         object-position: center center;
       }
     }
+  }
+`;
+
+export const NameChangeWrapper = styled.div`
+  padding: 20px;
+  
+  input {
+    width: 100%;
+    padding: 12px 16px;
   }
 `;

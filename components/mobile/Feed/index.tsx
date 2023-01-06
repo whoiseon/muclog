@@ -6,7 +6,7 @@ import {
   ColorInputWrapper,
   MyBackground,
   MyName,
-  MyProfile,
+  MyProfile, NameChangeWrapper,
   PhotoChangeWrapper,
   Profile,
   Wrapper
@@ -25,16 +25,14 @@ import {
   updateDoc,
   where
 } from "@firebase/firestore";
-import {db, storage} from "lib/firebase";
+import {db, auth} from "lib/firebase";
 import WriteForm from "components/mobile/WriteForm";
 import Log from "components/mobile/Log";
 import LogSkeleton from "components/common/Skeleton/LogSkeleton";
 import Loading from "components/common/Loading";
 import GlobalUpdateModal from "components/common/GlobalUpdateModal";
-import {updateProfileColor, updateProfileImage} from "store/slices/user/userSlice";
-import {getDownloadURL, ref, uploadString} from "@firebase/storage";
-import {v4 as randomFileNameUuid} from "uuid";
-import {ProfileImageUpdateParams} from "store/slices/user/type";
+import {updateProfileColor, updateProfileImage, updateUserName} from "store/slices/user/userSlice";
+import {ProfileImageUpdateParams, UserNameUpdateParams} from "store/slices/user/type";
 
 export default function Feed() {
   const router = useRouter();
@@ -53,6 +51,9 @@ export default function Feed() {
 
   const [backgroundUpdateModal, setBackgroundUpdateModal] = useState(false);
   const [photoUpdateModal, setPhotoUpdateModal] = useState(false);
+
+  const [myName, setMyName] = useState<string | null>("");
+  const [nameUpdateModal, setNameUpdateModal] = useState(false);
 
   const getUserInfo = useCallback( async () => {
     const userCollection = doc(db, "Users", `${router.query.uid}`);
@@ -100,9 +101,9 @@ export default function Feed() {
     setBackgroundUpdateModal(true);
   }, []);
 
-  const handleUpdateProfileColor = useCallback(() => {
+  const handleUpdateProfileColor = useCallback( async () => {
     if (profileColor !== userInfo?.profileColor) {
-      dispatch(updateProfileColor({
+      await dispatch(updateProfileColor({
         uid: userInfo?.uid,
         color: profileColor
       }))
@@ -137,7 +138,7 @@ export default function Feed() {
   }, []);
 
   const handleUpdatePhoto = useCallback( async () => {
-    if (attachment && !(attachment === myInfo?.photoURL)) {
+    if (attachment && attachment !== myInfo?.photoURL) {
       await dispatch(updateProfileImage({
         uid: myInfo?.uid,
         email: myInfo?.email,
@@ -145,9 +146,30 @@ export default function Feed() {
       } as ProfileImageUpdateParams));
     }
 
-    getUserInfo();
+    await getUserInfo();
     setPhotoUpdateModal(false);
   }, [attachment, myInfo, getUserInfo]);
+
+  const openNameUpdateModal = useCallback(() => {
+    setNameUpdateModal(true);
+    setMyName(myInfo?.displayName);
+  }, [myInfo]);
+
+  const handleUpdateName = useCallback( async () => {
+    if (myName && myName !== myInfo?.displayName) {
+      await dispatch(updateUserName({
+        uid: myInfo?.uid,
+        displayName: myName,
+      } as UserNameUpdateParams));
+    }
+
+    await getUserInfo();
+    setNameUpdateModal(false);
+  }, [myInfo, myName, getUserInfo]);
+
+  const onChangeMyName = (event: ChangeEvent<HTMLInputElement>) => {
+    setMyName(event.target.value);
+  };
 
   return (
     <>
@@ -221,8 +243,15 @@ export default function Feed() {
                     { userInfo?.displayName }
                     {
                       isMyFeed && (
-                        <button>
-                          수정
+                        <button
+                          onClick={openNameUpdateModal}
+                        >
+                          <Image
+                            src="/image/icon/config-icon.svg"
+                            alt="Name change"
+                            width={14}
+                            height={14}
+                          />
                         </button>
                       )
                     }
@@ -324,6 +353,24 @@ export default function Feed() {
                 />
               </div>
             </PhotoChangeWrapper>
+          </GlobalUpdateModal>
+        )
+      }
+      {
+        nameUpdateModal && (
+          <GlobalUpdateModal
+            onClick={handleUpdateName}
+            setModal={setNameUpdateModal}
+            title="닉네임 변경"
+            buttonText="변경"
+          >
+            <NameChangeWrapper>
+              <input
+                type="text"
+                value={myName || ""}
+                onChange={onChangeMyName}
+              />
+            </NameChangeWrapper>
           </GlobalUpdateModal>
         )
       }

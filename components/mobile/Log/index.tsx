@@ -237,7 +237,9 @@ export default function Log({ data, isOwner }: LogProps) {
         createdAt: Date.now(),
         creatorName: userInfo?.displayName,
         creatorId: userInfo?.uid,
-        creatorProfile: userInfo?.photoURL
+        creatorProfile: userInfo?.photoURL,
+        isReply: false,
+        commentId: "",
       })
 
       await updateDoc(logRef, {

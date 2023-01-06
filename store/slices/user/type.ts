@@ -19,7 +19,10 @@ export interface userState {
   updateProfileColorError: string | null,
   updateProfileImageLoading: boolean,
   updateProfileImageSuccess: boolean,
-  updateProfileImageError: string | null
+  updateProfileImageError: string | null,
+  updateUserNameLoading: boolean,
+  updateUserNameSuccess: boolean,
+  updateUserNameError: string | null
 }
 
 export interface SignUpRequestParams {
@@ -52,4 +55,9 @@ export interface ProfileImageUpdateParams {
   uid: string,
   email: string,
   image: string,
+}
+
+export interface UserNameUpdateParams {
+  uid: string,
+  displayName: string,
 }

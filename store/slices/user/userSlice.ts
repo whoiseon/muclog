@@ -5,7 +5,7 @@ import {db, auth, storage} from "lib/firebase";
 import {
   LoginRequestParams, ProfileColorUpdateParams, ProfileImageUpdateParams,
   SignUpRequestParams,
-  SocialLoginRequestParams,
+  SocialLoginRequestParams, UserNameUpdateParams,
   UserRequestParams,
   userState
 } from "store/slices/user/type";
@@ -14,7 +14,7 @@ import {
   createUserWithEmailAndPassword, GithubAuthProvider,
   GoogleAuthProvider,
   signInWithEmailAndPassword, signInWithPopup,
-  updateProfile
+  updateProfile, User
 } from "@firebase/auth";
 import {getDownloadURL, ref, uploadString} from "@firebase/storage";
 
@@ -42,7 +42,10 @@ const initialState: userState = {
   updateProfileColorError: null,
   updateProfileImageLoading: false,
   updateProfileImageSuccess: false,
-  updateProfileImageError: null
+  updateProfileImageError: null,
+  updateUserNameLoading: false,
+  updateUserNameSuccess: false,
+  updateUserNameError: null
 }
 
 export const fetchSignUpRequest = createAsyncThunk(
@@ -270,6 +273,27 @@ export const updateProfileImage = createAsyncThunk(
   }
 );
 
+export const updateUserName = createAsyncThunk(
+  "user/UPDATE_USER_NAME",
+  async ({ uid, displayName }: UserNameUpdateParams, { rejectWithValue }) => {
+    try {
+      await updateProfile(<User>auth.currentUser, {
+        displayName,
+      });
+
+      const userCollection = doc(db, "Users", uid);
+
+      await updateDoc(userCollection, {
+        displayName,
+      });
+
+      return displayName
+    } catch (error) {
+      throw rejectWithValue("유저 정보 요청 실패");
+    }
+  }
+);
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -411,6 +435,22 @@ export const userSlice = createSlice({
         state.updateProfileImageLoading = false;
         state.updateProfileImageSuccess = false;
         state.updateProfileImageError = action.payload as string;
+      })
+      .addCase(updateUserName.pending, (state) => {
+        state.updateUserNameSuccess = false;
+        state.updateUserNameLoading = true;
+        state.updateUserNameError = null;
+      })
+      .addCase(updateUserName.fulfilled, (state, action) => {
+        state.updateUserNameLoading = false;
+        state.updateUserNameSuccess = true;
+        state.updateUserNameError = null;
+        state.displayName = action.payload;
+      })
+      .addCase(updateUserName.rejected, (state, action) => {
+        state.updateUserNameLoading = false;
+        state.updateUserNameSuccess = false;
+        state.updateUserNameError = action.payload as string;
       })
   )
 });
