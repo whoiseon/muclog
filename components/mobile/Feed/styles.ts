@@ -8,7 +8,7 @@ export const Wrapper = styled.div`
 export const MyBackground = styled.div`
   position: relative;
   width: 100%;
-  height: 146px;
+  height: 180px;
   
   button {
     position: absolute;

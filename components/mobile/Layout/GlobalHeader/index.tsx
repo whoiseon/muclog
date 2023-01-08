@@ -6,20 +6,25 @@ import {Dispatch, SetStateAction, useCallback, useEffect} from "react";
 import {useRouter} from "next/router";
 
 interface GlobalHeaderProps {
-  setMenuActive: Dispatch<SetStateAction<boolean>>
+  setMenuActive: Dispatch<SetStateAction<boolean>>,
+  setSearchActive: Dispatch<SetStateAction<boolean>>
 }
 
-export default function GlobalHeader({ setMenuActive }: GlobalHeaderProps) {
+export default function GlobalHeader({ setMenuActive, setSearchActive }: GlobalHeaderProps) {
   const router = useRouter();
 
   const handleShowMenu = useCallback(() => {
     setMenuActive((prev) => !prev)
   }, []);
 
+  const handleShowSearch = useCallback(() => {
+    setSearchActive((prev) => !prev);
+  }, []);
+
   return (
     <Header data-layout="global-header">
       <Search>
-        <button name="icon">
+        <button name="icon" onClick={handleShowSearch}>
           <Icon>
             <Image
               src="/image/icon/search-icon.svg"

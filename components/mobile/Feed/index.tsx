@@ -64,7 +64,7 @@ export default function Feed() {
 
   useEffect(() => {
     getUserInfo();
-  }, []);
+  }, [router.query.uid]);
 
   useEffect(() => {
     const q = query(
@@ -82,7 +82,7 @@ export default function Feed() {
 
       setMyLogs(logArray);
     })
-  }, [myLogsLimit, myInfo]);
+  }, [myLogsLimit, myInfo, router.query.uid]);
 
   useEffect(() => {
     setIsMyFeed(myInfo?.uid === router.query.uid);

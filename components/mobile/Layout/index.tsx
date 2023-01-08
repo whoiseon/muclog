@@ -2,12 +2,13 @@ import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 
 import GlobalHeader from "components/mobile/Layout/GlobalHeader";
-import {Main, MenuModal} from "components/mobile/Layout/styles";
+import {Main, MenuModal, SearchModal} from "components/mobile/Layout/styles";
 import Menus from "components/mobile/Layout/Menus";
 import {AppDispatch} from "store";
 import {auth} from "lib/firebase";
 import {fetchUserInfoRequest} from "store/slices/user/userSlice";
 import {UserRequestParams} from "store/slices/user/type";
+import Search from "components/mobile/Layout/Search";
 
 interface LayoutProps {
   children: JSX.Element,
@@ -20,6 +21,7 @@ export default function Layout({ children, isLoggedIn, isDark, setIsDark }: Layo
   const dispatch = useDispatch<AppDispatch>();
 
   const [menuActive, setMenuActive] = useState(false);
+  const [searchActive, setSearchActive] = useState(false);
 
   useEffect(() => {
     if (auth.currentUser) {
@@ -35,6 +37,7 @@ export default function Layout({ children, isLoggedIn, isDark, setIsDark }: Layo
       <>
         <GlobalHeader
           setMenuActive={setMenuActive}
+          setSearchActive={setSearchActive}
         />
         <Main>
           { children }
@@ -46,6 +49,11 @@ export default function Layout({ children, isLoggedIn, isDark, setIsDark }: Layo
             isDark={isDark}
           />
         </MenuModal>
+        <SearchModal data-layout="mobile-search" searchActive={searchActive}>
+          <Search
+            setSearchActive={setSearchActive}
+          />
+        </SearchModal>
       </>
     )
     : children

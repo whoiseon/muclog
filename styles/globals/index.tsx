@@ -256,6 +256,10 @@ const global = (theme: Theme) => css`
     background-color: ${theme.mode.mobileMenuBackground};
   }
   
+  div[data-layout="mobile-search"] {
+    background-color: ${theme.mode.mobileMenuBackground};
+  }
+  
   div[data-layout="mobile-menu-header"] {
     background-color: ${theme.mode.mobileMenuHeaderBackground};
     border-bottom: ${theme.mode.mobileMenuHeaderBorder};
