@@ -3,11 +3,11 @@ import {signOut, User} from "@firebase/auth";
 import {auth} from "lib/firebase";
 
 interface RootProps {
-  userInfo: User | null
+
 }
 
 
-export default function Root({ userInfo }: RootProps) {
+export default function Root() {
   const router = useRouter();
 
   const onLogOutClick = async () => {

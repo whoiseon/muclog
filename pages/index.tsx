@@ -11,20 +11,19 @@ import PCAuth from "components/pc/Auth";
 interface HomeProps {
   isLoggedIn: boolean,
   isMobile: boolean,
-  userInfo: User | null
 }
 
-export default function Home({ isLoggedIn, isMobile, userInfo }: HomeProps) {
+export default function Home({ isLoggedIn, isMobile }: HomeProps) {
   const handleMobileDetect = useCallback(() => {
     if (isMobile) {
       if (isLoggedIn) {
-        return <MobileRoot userInfo={userInfo} />
+        return <MobileRoot />
       } else {
         return <MobileAuth />
       }
     } else {
       if (isLoggedIn) {
-        return <PCRoot userInfo={userInfo} />
+        return <PCRoot />
       } else {
         return <PCAuth />
       }
