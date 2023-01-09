@@ -76,7 +76,7 @@ export default function Log({ data, isOwner }: LogProps) {
     const q = query(
       collection(db, "comments"),
       where("logId", "==", data.id),
-      orderBy("createdAt", "desc"),
+      orderBy("createdAt", "asc"),
       limit(commentsLimit)
     );
 

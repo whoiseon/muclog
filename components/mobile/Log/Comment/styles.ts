@@ -7,6 +7,7 @@ export const Wrapper = styled.div`
 
 export const Profile = styled.div`
   margin-right: 12px;
+  cursor: pointer;
   
   img {
     border-radius: 50%;
@@ -16,10 +17,33 @@ export const Profile = styled.div`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  
+  button {
+    background: none;
+    text-align: left;
+    font-weight: 400;
+    opacity: 0.5;
+    font-size: 12px;
+    padding: 6px 0;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+  
+  form {
+    padding: 0;
+    
+    input {
+      width: 100%;
+    }
+  }
 `;
 
 export const Info = styled.div`
   margin-bottom: 6px;
+  cursor: pointer;
   
   span:nth-of-type(1) {
     margin-right: 6px;
@@ -32,5 +56,6 @@ export const Info = styled.div`
 `;
 
 export const Text = styled.div`
-  
+  display: flex;
+  justify-content: flex-start;
 `;

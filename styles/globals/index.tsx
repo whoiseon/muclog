@@ -347,10 +347,12 @@ const global = (theme: Theme) => css`
   }
   
   div[data-layout="commentText"] {
-    background-color: ${theme.mode.background};
-    padding: 12px;
-    border: ${theme.mode.cardBorder};
-    border-radius: 4px;
+    p {
+      background-color: ${theme.mode.background};
+      padding: 12px;
+      border: ${theme.mode.cardBorder};
+      border-radius: 4px;
+    }
   }
   
   label[data-layout="profile-photo-picker"] {
