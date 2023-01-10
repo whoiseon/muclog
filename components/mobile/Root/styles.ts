@@ -6,5 +6,5 @@ export const Wrapper = styled.div`
 `;
 
 export const LogList = styled.div`
-
+  padding-bottom: 60px;
 `;

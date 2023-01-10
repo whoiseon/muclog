@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import {$BACKGROUND_COLOR_MEDIUM_BLACK} from "styles/variables";
 
 export const Main = styled.main`
   width: 100%;
