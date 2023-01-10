@@ -359,6 +359,14 @@ const global = (theme: Theme) => css`
     background-color: ${theme.mode.mobileMenuHeaderBackground};
     border-radius: 4px;
   }
+  
+  div[data-layout="comment"] {
+    padding: 12px 20px;
+  }
+
+  div[data-layout="reply"] {
+    padding: 12px 0;
+  }
 `;
 
 const GlobalStyle = () => {

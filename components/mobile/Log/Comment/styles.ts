@@ -1,8 +1,16 @@
 import styled from "@emotion/styled";
 
 export const Wrapper = styled.div`
+  position: relative;
   display: flex;
   padding: 12px 20px;
+  
+  & > img {
+    position: absolute;
+    top: 20px;
+    left: -38px;
+    opacity: 0.4;
+  }
 `;
 
 export const Profile = styled.div`
@@ -19,7 +27,7 @@ export const Content = styled.div`
   flex-direction: column;
   width: 100%;
   
-  button {
+  & > button {
     background: none;
     text-align: left;
     font-weight: 400;
@@ -59,3 +67,28 @@ export const Text = styled.div`
   display: flex;
   justify-content: flex-start;
 `;
+
+export const ReplyWrapper = styled.div`
+  
+`;
+
+export const ReplyMoreButton = styled.div`
+  button {
+    width: 100%;
+    padding: 20px;
+    border-radius: 4px;
+    background: none;
+    text-align: left;
+    
+    &:hover {
+      span {
+        opacity: 1;
+      }
+    }
+    
+    span {
+      opacity: 0.5;
+    }
+  }
+`;
+

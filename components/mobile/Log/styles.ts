@@ -204,8 +204,6 @@ export const CommentMoreButton = styled.div`
     background: none;
     
     &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
-      
       span {
         opacity: 1;
       }

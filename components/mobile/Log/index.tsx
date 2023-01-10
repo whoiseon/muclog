@@ -116,7 +116,7 @@ export default function Log({ data, isOwner }: LogProps) {
 
   const handleDeleteLog = useCallback( async () => {
     try {
-      const logRef = doc(db, "logs", data.id)
+      const logRef = doc(db, "logs", data.id);
 
       await deleteDoc(logRef);
 
