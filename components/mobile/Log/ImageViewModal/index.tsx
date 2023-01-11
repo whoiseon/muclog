@@ -35,8 +35,8 @@ export default function ImageViewModal({ data, setOpenImageView }: ImageViewModa
           <Image
             src="/image/icon/dark/close-dark-icon.svg"
             alt="close"
-            width={24}
-            height={24}
+            width={20}
+            height={20}
           />
         </button>
       </Header>

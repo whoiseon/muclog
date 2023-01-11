@@ -16,14 +16,13 @@ const ModalAnimation = keyframes`
   }
 `
 
-export const Wrapper = styled.div<{ top: number, right: number }>`
+export const Wrapper = styled.div`
   position: absolute;
-  top: ${({ top }) => top}px;
-  right: ${({ right }) => right}px;
   width: 140px;
   padding: 10px;
   border-radius: 6px;
   animation: ${ModalAnimation} 0.3s ease;
+  z-index: 10;
   
   ul {
     li {

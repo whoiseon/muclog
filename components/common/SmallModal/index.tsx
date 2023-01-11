@@ -3,12 +3,16 @@ import {Wrapper} from "components/common/SmallModal/styles";
 
 interface ModalProps {
   setMoreModal: Dispatch<SetStateAction<boolean>>
-  modalTop: number,
-  modalLeft: number,
+  styles?: {
+    top?: string,
+    bottom?: string,
+    left?: string,
+    right?: string
+  }
   children: string | JSX.Element,
 }
 
-export default function SmallModal({ children, setMoreModal, modalTop, modalLeft }: ModalProps) {
+export default function SmallModal({ children, setMoreModal, styles }: ModalProps) {
   const ModalRef = useRef<HTMLDivElement>(null);
 
   const onClickCloseModal = useCallback(() => {
@@ -34,9 +38,8 @@ export default function SmallModal({ children, setMoreModal, modalTop, modalLeft
     <Wrapper
       onClick={onClickCloseModal}
       ref={ModalRef}
-      top={modalTop}
-      right={modalLeft}
       data-layout="smallModal"
+      style={styles}
     >
       { children }
     </Wrapper>

@@ -140,7 +140,7 @@ export const LogTools = styled.div`
 export const CommentList = styled.div`
   padding-top: 12px;
   
-  form {
+  & > form {
     display: flex;
     padding: 14px 20px;
     margin-top: 12px;

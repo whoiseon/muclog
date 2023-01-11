@@ -1,4 +1,15 @@
 import styled from "@emotion/styled";
+import {keyframes} from "@emotion/react";
+
+const ViewAnimation = keyframes`
+  0% {
+    opacity: 0;
+  }
+  
+  100% {
+    opacity: 1;
+  }
+`
 
 export const Background = styled.div`
   position: fixed;
@@ -9,6 +20,7 @@ export const Background = styled.div`
   z-index: 101;
   background-color: rgba(9, 9, 9, 0.9);
   backdrop-filter: blur(10px);
+  animation: ${ViewAnimation} 0.12s ease-in;
 `;
 
 export const Header = styled.div`
@@ -18,7 +30,7 @@ export const Header = styled.div`
   
   button {
     background: none;
-    padding: 40px;
+    padding: 30px;
     opacity: 0.5;
     
     &:hover {
@@ -34,7 +46,7 @@ export const Wrapper = styled.div`
 export const LogInfo = styled.div`
   display: flex;
   align-items: center;
-  padding: 40px 40px 0;
+  padding: 0 40px;
 `;
 
 export const Profile = styled.div`
@@ -71,7 +83,7 @@ export const Content = styled.div`
 export const Attachment = styled.div`
   position: relative;
   width: 100%;
-  height: 300px;
+  height: 400px;
   
   img {
     width: 100%;

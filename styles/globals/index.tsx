@@ -163,6 +163,14 @@ const global = (theme: Theme) => css`
     border: 4px solid ${theme.mode.mobileMenuHeaderBackground};
   }
   
+  button[data-layout="replyButton"] {
+    color: ${theme.mode.text};
+    
+    &:hover {
+      color: ${theme.mode.text};
+    }
+  }
+  
   button {
     border: 0;
     border-radius: ${$BORDER_RADIUS};

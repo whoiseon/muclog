@@ -66,8 +66,8 @@ export default function Search({ setSearchActive }: SearchProps) {
           <Image
             src="/image/icon/route-back-icon.svg"
             alt="history back"
-            width={24}
-            height={24}
+            width={18}
+            height={18}
           />
         </button>
         <div>

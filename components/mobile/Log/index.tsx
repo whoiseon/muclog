@@ -373,8 +373,10 @@ export default function Log({ data, isOwner }: LogProps) {
             moreModal && (
               <SmallModal
                 setMoreModal={setMoreModal}
-                modalTop={14}
-                modalLeft={48}
+                styles={{
+                  top: '14px',
+                  right: '48px'
+                }}
               >
                 {
                   isOwner
@@ -463,7 +465,11 @@ export default function Log({ data, isOwner }: LogProps) {
                       {
                         comments.map((comment: any, i: number) => {
                           return (
-                            <Comment key={comment.id} data={comment} />
+                            <Comment
+                              key={comment.id}
+                              data={comment}
+                              isOwner={isOwner}
+                            />
                           )
                         })
                       }
