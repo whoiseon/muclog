@@ -37,16 +37,17 @@ import GlobalConfirmModal from "components/common/GlobalConfirmModal";
 
 interface CommentProps {
   data: DocumentData,
-  isOwner: boolean
 }
 
-export default function Comment({ data, isOwner }: CommentProps) {
+export default function Comment({ data }: CommentProps) {
   const router = useRouter();
 
   const userInfo = useSelector((state: RootState) => state.user);
 
   const replyRef = useRef<any>(null);
   const EditInputRef = useRef<any>(null);
+
+  const [isOwner, setIsOwner] = useState(data.creatorId === userInfo.uid);
 
   const [replyContent, onChangeReplyContent, setReplyContent] = useInput("");
   const [newContent, onChangeNewContent, setNewContent]= useInput(data.content);
@@ -268,9 +269,6 @@ export default function Comment({ data, isOwner }: CommentProps) {
                       moreModal && (
                         <SmallModal
                           setMoreModal={setMoreModal}
-                          styles={{
-                            bottom: '-100px',
-                          }}
                         >
                           {
                             isOwner
@@ -323,7 +321,6 @@ export default function Comment({ data, isOwner }: CommentProps) {
                 <Reply
                   key={reply.id}
                   data={reply}
-                  isOwner={isOwner}
                 />
               )
             })

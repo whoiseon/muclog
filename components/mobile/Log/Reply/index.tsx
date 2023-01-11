@@ -21,16 +21,21 @@ import SmallModal from "components/common/SmallModal";
 import GlobalConfirmModal from "components/common/GlobalConfirmModal";
 import {db} from "lib/firebase";
 import {EditForm} from "components/mobile/Log/Comment/styles";
+import {useSelector} from "react-redux";
+import {RootState} from "store";
 
 interface ReplyProps {
   data: DocumentData,
-  isOwner: boolean
 }
 
-export default function Reply({ data, isOwner }: ReplyProps) {
+export default function Reply({ data }: ReplyProps) {
   const router = useRouter();
 
+  const userInfo = useSelector((state: RootState) => state.user);
+
   const EditInputRef = useRef<any>(null);
+
+  const [isOwner, setIsOwner] = useState(data.creatorId === userInfo.uid);
 
   const [newContent, onChangeNewContent, setNewContent]= useInput(data.content);
   const [editing, setEditing] = useState(false);
@@ -175,9 +180,6 @@ export default function Reply({ data, isOwner }: ReplyProps) {
                     moreModal && (
                       <SmallModal
                         setMoreModal={setMoreModal}
-                        styles={{
-                          bottom: '-100px',
-                        }}
                       >
                         {
                           isOwner

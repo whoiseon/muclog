@@ -468,7 +468,6 @@ export default function Log({ data, isOwner }: LogProps) {
                             <Comment
                               key={comment.id}
                               data={comment}
-                              isOwner={isOwner}
                             />
                           )
                         })

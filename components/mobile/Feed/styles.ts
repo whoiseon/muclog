@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import {$BACKGROUND_COLOR_WHITE, $COLOR_GRAY} from "styles/variables";
 
 export const Wrapper = styled.div`
-
+  padding-bottom: 60px;
 `;
 
 export const MyBackground = styled.div`

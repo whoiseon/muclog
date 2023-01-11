@@ -121,6 +121,10 @@ const global = (theme: Theme) => css`
     &:active {
       background: none;
     }
+    
+    &:disabled {
+      opacity: 0.5;
+    }
   }
   
   button[name="Github"], button[name="Google"] {
