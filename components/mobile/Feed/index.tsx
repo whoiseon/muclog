@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Image from "next/image";
 
 import {
-  ColorInputWrapper,
+  ColorInputWrapper, EmptyLogs,
   MyBackground,
   MyName,
   MyProfile, NameChangeWrapper,
@@ -60,7 +60,7 @@ export default function Feed() {
     const userSnap = await getDoc(userCollection);
 
     setUserInfo(userSnap.data());
-  }, [router.query.uid])
+  }, [router.query.uid]);
 
   useEffect(() => {
     getUserInfo();
@@ -81,7 +81,9 @@ export default function Feed() {
       }));
 
       setMyLogs(logArray);
-    })
+    });
+
+    setLoading(false);
   }, [myLogsLimit, myInfo, router.query.uid]);
 
   useEffect(() => {
@@ -170,6 +172,8 @@ export default function Feed() {
   const onChangeMyName = (event: ChangeEvent<HTMLInputElement>) => {
     setMyName(event.target.value);
   };
+
+  console.log(loading);
 
   return (
     <>
@@ -263,22 +267,32 @@ export default function Feed() {
               </MyProfile>
               {isMyFeed && <WriteForm />}
               {
-                myLogs.length > 0
+                loading
                   ? (
-                    myLogs.map((log) => {
-                      return <Log
-                        key={log.id}
-                        data={log}
-                        isOwner={log.creatorId === myInfo?.uid}
-                      />
-                    })
-                  )
-                  : (
                     Array.from(Array(5).keys()).map((v, i) => {
                       return (
                         <LogSkeleton key={v + i} />
                       )
                     })
+                  )
+                  : (
+                    myLogs.length > 0
+                      ? (
+                        myLogs.map((log) => {
+                          return <Log
+                            key={log.id}
+                            data={log}
+                            isOwner={log.creatorId === myInfo?.uid}
+                          />
+                        })
+                      )
+                      : (
+                        <EmptyLogs>
+                          <p>
+                            게시글이 존재하지 않습니다!
+                          </p>
+                        </EmptyLogs>
+                      )
                   )
               }
             </Wrapper>

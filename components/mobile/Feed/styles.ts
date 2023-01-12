@@ -2,6 +2,8 @@ import styled from "@emotion/styled";
 import {$BACKGROUND_COLOR_WHITE, $COLOR_GRAY} from "styles/variables";
 
 export const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
   padding-bottom: 60px;
 `;
 
@@ -162,5 +164,17 @@ export const NameChangeWrapper = styled.div`
   input {
     width: 100%;
     padding: 12px 16px;
+  }
+`;
+
+export const EmptyLogs = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 60px;
+  
+  p {
+    font-size: 18px;
+    opacity: 0.5;
   }
 `;

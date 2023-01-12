@@ -124,31 +124,6 @@ export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) 
             </ArrowIcon>
           </Link>
         </li>
-      </ul>
-      <ul data-layout="mobile-menu-ul">
-        <li>
-          <Link href="/profile" onClick={onClickMovePage}>
-            <div>
-              <Icon>
-                <Image
-                  src="/image/icon/account-icon.svg"
-                  alt="Account"
-                  width={18}
-                  height={18}
-                />
-              </Icon>
-              <span>계정</span>
-            </div>
-            <ArrowIcon>
-              <Image
-                src="/image/icon/menu-arrow-icon.svg"
-                alt="Menu Arrow"
-                width={18}
-                height={12}
-              />
-            </ArrowIcon>
-          </Link>
-        </li>
         <li>
           <Link href={`/feed/${userInfo?.uid}`} onClick={onClickMovePage}>
             <div>

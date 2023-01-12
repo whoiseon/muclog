@@ -1,4 +1,4 @@
-import {ChangeEvent, Dispatch, FormEvent, SetStateAction, useCallback, useRef, useState} from "react";
+import {ChangeEvent, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useRef, useState} from "react";
 import Image from "next/image";
 import {useSelector} from "react-redux";
 
@@ -24,9 +24,10 @@ import {RootState} from "store";
 
 interface WriteModalProps {
   setWriteModal: Dispatch<SetStateAction<boolean>>
+  writeModal: boolean
 }
 
-export default function WriteModal({ setWriteModal }: WriteModalProps) {
+export default function WriteModal({ setWriteModal, writeModal }: WriteModalProps) {
   const userInfo = useSelector((state: RootState) => state.user);
 
   const TextRef = useRef<any>(null);
@@ -39,10 +40,11 @@ export default function WriteModal({ setWriteModal }: WriteModalProps) {
   }, [content]);
 
   const handleCloseModal = useCallback(() => {
+    TextRef.current.blur();
     setWriteModal(false);
     setContent("");
     setAttachment("");
-  }, []);
+  }, [TextRef]);
 
   const handleFocusTextarea = useCallback(() => {
     const end = TextRef.current.value.length;
@@ -102,6 +104,12 @@ export default function WriteModal({ setWriteModal }: WriteModalProps) {
     }
     reader.readAsDataURL(theFile);
   }, []);
+
+  useEffect(() => {
+    if (writeModal) {
+      TextRef.current.focus();
+    }
+  }, [TextRef, writeModal]);
 
   return (
     <Form

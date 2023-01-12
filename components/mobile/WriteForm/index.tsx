@@ -64,6 +64,7 @@ export default function WriteForm() {
       <ModalWrapper writeActive={writeModal}>
         <WriteModal
           setWriteModal={setWriteModal}
+          writeModal={writeModal}
         />
       </ModalWrapper>
     </>
