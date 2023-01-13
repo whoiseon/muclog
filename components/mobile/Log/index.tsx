@@ -1,4 +1,4 @@
-import {FormEvent, useCallback, useEffect, useRef, useState} from "react";
+import {ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState} from "react";
 import Image from "next/image";
 
 import {db} from "lib/firebase";
@@ -21,7 +21,7 @@ import {
   CreatedAt, EditForm, Info,
   LogInfo, LogTools,
   MoreButton, NoComments,
-  Profile,
+  Profile, ReportWrapper,
   UserName,
   Wrapper
 } from "components/mobile/Log/styles";
@@ -38,6 +38,8 @@ import "moment/locale/ko";
 import ImageViewModal from "components/mobile/Log/ImageViewModal";
 import {router} from "next/client";
 import {useRouter} from "next/router";
+import GlobalUpdateModal from "components/common/GlobalUpdateModal";
+import {reportData} from "public/data/report";
 
 interface LogProps {
   data: DocumentData,
@@ -61,6 +63,8 @@ export default function Log({ data, isOwner }: LogProps) {
   const [openComment, setOpenComment] = useState(false);
   const [openImageView, setOpenImageView] = useState(false);
 
+  const [report, setReport] = useState("");
+
   const contentsReplaceNewline = useCallback(() => {
     return data.content.replaceAll("<br />", "\n");
   }, [data.content]);
@@ -71,6 +75,7 @@ export default function Log({ data, isOwner }: LogProps) {
   const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
   const [updateConfirmModal, setUpdateConfirmModal] = useState(false);
   const [imageDeleteConfirmModal, setImageDeleteConfirmModal] = useState(false);
+  const [reportModal, setReportModal] = useState(false);
 
   useEffect(() => {
     const q = query(
@@ -113,6 +118,10 @@ export default function Log({ data, isOwner }: LogProps) {
 
   const openImageViewModal = useCallback(() => {
     setOpenImageView(true);
+  }, []);
+
+  const openReportModal = useCallback(() => {
+    setReportModal(true);
   }, []);
 
   const handleDeleteLog = useCallback( async () => {
@@ -170,6 +179,26 @@ export default function Log({ data, isOwner }: LogProps) {
       console.log(error);
     }
   }, []);
+
+  const handleReport = useCallback( async () => {
+    try {
+      await addDoc(collection(db, "reports"), {
+        reporterId: userInfo?.uid,
+        reporterName: userInfo?.displayName,
+        createdAt: Date.now(),
+        solution: false,
+        content: report,
+        reportedLogId: data.id,
+        reportedCreatorId: data.creatorId,
+        reportedCreatorName: data.creatorName
+      });
+
+      setReport("");
+      setReportModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [userInfo, report, data]);
 
   const handleMoveUserFeed = (uid: string) => () => {
     router.push(`/feed/${uid}`);
@@ -252,6 +281,11 @@ export default function Log({ data, isOwner }: LogProps) {
       console.log(error);
     }
   }, [userInfo, data, commentContent]);
+
+  const onChangeReport = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setReport(event.target.value);
+    console.log(report);
+  }, [setReport, report]);
 
   useEffect(() => {
     if (editing) {
@@ -397,7 +431,7 @@ export default function Log({ data, isOwner }: LogProps) {
                     : (
                       <ul>
                         <li>
-                          <button>
+                          <button onClick={openReportModal}>
                             <span>신고</span>
                           </button>
                         </li>
@@ -559,6 +593,52 @@ export default function Log({ data, isOwner }: LogProps) {
             data={data}
             setOpenImageView={setOpenImageView}
           />
+        )
+      }
+      {
+        reportModal && (
+          <GlobalUpdateModal
+            onClick={handleReport}
+            setModal={setReportModal}
+            title="신고하기"
+            buttonText="제출"
+          >
+            <ReportWrapper>
+              <p>
+                문제를 가장 잘 설명하는 사유를 선택해주세요.
+              </p>
+              <ul>
+                {
+                  reportData.map((data, i) => {
+                    const activeStyle = {
+                      backgroundColor: $COLOR_MAIN,
+                      color: $COLOR_WHITE
+                    }
+
+                    return (
+                      <li key={data.id}>
+                        <input
+                          type="radio"
+                          name="select"
+                          value={data.text}
+                          id={data.id}
+                          onChange={onChangeReport}
+                        />
+                        <div data-layout="report-label">
+                          <label
+                            htmlFor={data.id}
+                            style={report === data.text ? activeStyle : {}}
+                          >
+                            {data.text}
+                          </label>
+                        </div>
+                      </li>
+                    )
+                  })
+                }
+              </ul>
+            </ReportWrapper>
+          </GlobalUpdateModal>
         )
       }
     </>

@@ -372,6 +372,14 @@ const global = (theme: Theme) => css`
     border-radius: 4px;
   }
   
+  div[data-layout="report-label"] {
+    label {
+      display: block;
+      background-color: ${theme.mode.background};
+      border-radius: 4px;
+    }
+  }
+  
   div[data-layout="comment"] {
     padding: 12px 20px;
   }

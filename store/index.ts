@@ -11,7 +11,7 @@ const makeStore = () => {
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(logger),
+    }).concat(),
     devTools: true,
   });
 }

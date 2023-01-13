@@ -214,3 +214,42 @@ export const CommentMoreButton = styled.div`
     }
   }
 `;
+
+export const ReportWrapper = styled.div`
+  padding: 20px;
+  
+  p {
+    width: 100%;
+    opacity: 0.5;
+    margin-bottom: 20px;
+  }
+  
+  ul {
+    li {
+      position: relative;
+      margin-bottom: 10px;
+      
+      input[type="radio"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+      }
+
+      input:checked {
+        background-color: red;
+      }
+      
+      div {
+        label {
+          padding: 16px 20px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+`;
