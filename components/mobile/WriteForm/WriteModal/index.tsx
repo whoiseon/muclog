@@ -40,8 +40,8 @@ export default function WriteModal({ setWriteModal, writeModal }: WriteModalProp
   }, [content]);
 
   const handleCloseModal = useCallback(() => {
-    TextRef.current.blur();
     setWriteModal(false);
+    TextRef.current.blur();
     setContent("");
     setAttachment("");
   }, [TextRef]);
@@ -104,12 +104,6 @@ export default function WriteModal({ setWriteModal, writeModal }: WriteModalProp
     }
     reader.readAsDataURL(theFile);
   }, []);
-
-  useEffect(() => {
-    if (writeModal) {
-      TextRef.current.focus();
-    }
-  }, [TextRef, writeModal]);
 
   return (
     <Form

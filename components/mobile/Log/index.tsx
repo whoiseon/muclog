@@ -63,7 +63,7 @@ export default function Log({ data, isOwner }: LogProps) {
   const [openComment, setOpenComment] = useState(false);
   const [openImageView, setOpenImageView] = useState(false);
 
-  const [report, setReport] = useState("");
+  const [report, setReport] = useState("선정적인 내용을 포함하고 있습니다.");
 
   const contentsReplaceNewline = useCallback(() => {
     return data.content.replaceAll("<br />", "\n");
@@ -189,8 +189,10 @@ export default function Log({ data, isOwner }: LogProps) {
         solution: false,
         content: report,
         reportedLogId: data.id,
+        reportedCommentId: "",
         reportedCreatorId: data.creatorId,
-        reportedCreatorName: data.creatorName
+        reportedCreatorName: data.creatorName,
+        type: "log"
       });
 
       setReport("");
@@ -284,8 +286,7 @@ export default function Log({ data, isOwner }: LogProps) {
 
   const onChangeReport = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setReport(event.target.value);
-    console.log(report);
-  }, [setReport, report]);
+  }, [setReport]);
 
   useEffect(() => {
     if (editing) {
@@ -610,6 +611,7 @@ export default function Log({ data, isOwner }: LogProps) {
               <ul>
                 {
                   reportData.map((data, i) => {
+                    const isActive = report === data.text
                     const activeStyle = {
                       backgroundColor: $COLOR_MAIN,
                       color: $COLOR_WHITE
@@ -627,10 +629,20 @@ export default function Log({ data, isOwner }: LogProps) {
                         <div data-layout="report-label">
                           <label
                             htmlFor={data.id}
-                            style={report === data.text ? activeStyle : {}}
+                            style={isActive ? activeStyle : {}}
                           >
                             {data.text}
                           </label>
+                          {
+                            isActive && (
+                              <Image
+                                src="/image/icon/check-icon.svg"
+                                alt="checked"
+                                width={18}
+                                height={12}
+                              />
+                            )
+                          }
                         </div>
                       </li>
                     )

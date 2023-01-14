@@ -245,9 +245,18 @@ export const ReportWrapper = styled.div`
       }
       
       div {
+        position: relative;
+        
         label {
           padding: 16px 20px;
           cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        
+        img {
+          position: absolute;
+          top: 18px;
+          right: 20px;
         }
       }
     }

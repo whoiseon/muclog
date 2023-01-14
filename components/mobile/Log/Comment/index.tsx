@@ -28,12 +28,16 @@ import {
   Wrapper, EditForm
 } from "components/mobile/Log/Comment/styles";
 import moment from "moment";
-import {FormEvent, useCallback, useEffect, useRef, useState} from "react";
+import {ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState} from "react";
 import {RootState} from "store";
 import useInput from "hooks/useInput";
 import Reply from "components/mobile/Log/Reply";
 import SmallModal from "components/common/SmallModal";
 import GlobalConfirmModal from "components/common/GlobalConfirmModal";
+import GlobalUpdateModal from "components/common/GlobalUpdateModal";
+import {ReportWrapper} from "components/mobile/Log/styles";
+import {reportData} from "public/data/report";
+import {$COLOR_MAIN, $COLOR_WHITE} from "styles/variables";
 
 interface CommentProps {
   data: DocumentData,
@@ -56,10 +60,12 @@ export default function Comment({ data }: CommentProps) {
   const [isReply, setIsReply] = useState(replies.length > 0);
   const [editing, setEditing] = useState(false);
   const [replyLimit, setReplyLimit] = useState(3);
+  const [report, setReport] = useState("선정적인 내용을 포함하고 있습니다.");
 
   const [moreModal, setMoreModal] = useState(false);
   const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
   const [updateConfirmModal, setUpdateConfirmModal] = useState(false);
+  const [reportModal, setReportModal] = useState(false);
 
   useEffect(() => {
     const q = query(
@@ -91,6 +97,10 @@ export default function Comment({ data }: CommentProps) {
   const openDeleteConfirmModal = useCallback(() => {
     setDeleteConfirmModal(true);
   }, [setDeleteConfirmModal]);
+
+  const openReportModal = useCallback(() => {
+    setReportModal(true);
+  }, []);
 
   const handleMoveUserFeed = (uid: string) => () => {
     router.push(`/feed/${uid}`);
@@ -187,6 +197,32 @@ export default function Comment({ data }: CommentProps) {
       console.log(error);
     }
   }, [newContent]);
+
+  const onChangeReport = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setReport(event.target.value);
+  }, [setReport]);
+
+  const handleReport = useCallback( async () => {
+    try {
+      await addDoc(collection(db, "reports"), {
+        reporterId: userInfo?.uid,
+        reporterName: userInfo?.displayName,
+        createdAt: Date.now(),
+        solution: false,
+        content: report,
+        reportedLogId: data.logId,
+        reportedCommentId: data.id,
+        reportedCreatorId: data.creatorId,
+        reportedCreatorName: data.creatorName,
+        type: "comment"
+      });
+
+      setReport("");
+      setReportModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [userInfo, report, data]);
 
   useEffect(() => {
     if (editing) {
@@ -289,7 +325,7 @@ export default function Comment({ data }: CommentProps) {
                               : (
                                 <ul>
                                   <li>
-                                    <button>
+                                    <button onClick={openReportModal}>
                                       <span>신고</span>
                                     </button>
                                   </li>
@@ -392,6 +428,63 @@ export default function Comment({ data }: CommentProps) {
             text="정말로 코멘트를 수정하시겠어요?"
             buttonText="수정"
           />
+        )
+      }
+      {
+        reportModal && (
+          <GlobalUpdateModal
+            onClick={handleReport}
+            setModal={setReportModal}
+            title="신고하기"
+            buttonText="제출"
+          >
+            <ReportWrapper>
+              <p>
+                문제를 가장 잘 설명하는 사유를 선택해주세요.
+              </p>
+              <ul>
+                {
+                  reportData.map((data, i) => {
+                    const isActive = report === data.text
+                    const activeStyle = {
+                      backgroundColor: $COLOR_MAIN,
+                      color: $COLOR_WHITE
+                    }
+
+                    return (
+                      <li key={data.id}>
+                        <input
+                          type="radio"
+                          name="select"
+                          value={data.text}
+                          id={data.id}
+                          onChange={onChangeReport}
+                        />
+                        <div data-layout="report-label">
+                          <label
+                            htmlFor={data.id}
+                            style={isActive ? activeStyle : {}}
+                          >
+                            {data.text}
+                          </label>
+                          {
+                            isActive && (
+                              <Image
+                                src="/image/icon/check-icon.svg"
+                                alt="checked"
+                                width={18}
+                                height={12}
+                              />
+                            )
+                          }
+                        </div>
+                      </li>
+                    )
+                  })
+                }
+              </ul>
+            </ReportWrapper>
+          </GlobalUpdateModal>
         )
       }
     </>
