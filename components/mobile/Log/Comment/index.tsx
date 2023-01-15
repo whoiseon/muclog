@@ -32,7 +32,7 @@ import {ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState} from "
 import {RootState} from "store";
 import useInput from "hooks/useInput";
 import Reply from "components/mobile/Log/Reply";
-import SmallModal from "components/common/SmallModal";
+import GlobalSelectModal from "components/common/GlobalSelectModal";
 import GlobalConfirmModal from "components/common/GlobalConfirmModal";
 import GlobalUpdateModal from "components/common/GlobalUpdateModal";
 import {ReportWrapper} from "components/mobile/Log/styles";
@@ -91,14 +91,17 @@ export default function Comment({ data }: CommentProps) {
   }, []);
 
   const openUpdateConfirmModal = useCallback(() => {
+    setMoreModal(false);
     setUpdateConfirmModal(true);
   }, []);
 
   const openDeleteConfirmModal = useCallback(() => {
+    setMoreModal(false);
     setDeleteConfirmModal(true);
   }, [setDeleteConfirmModal]);
 
   const openReportModal = useCallback(() => {
+    setMoreModal(false);
     setReportModal(true);
   }, []);
 
@@ -301,40 +304,6 @@ export default function Comment({ data }: CommentProps) {
                     onClick={openMoreModal}
                   >
                     <p>{data.content}</p>
-                    {
-                      moreModal && (
-                        <SmallModal
-                          setMoreModal={setMoreModal}
-                        >
-                          {
-                            isOwner
-                              ? (
-                                <ul>
-                                  <li>
-                                    <button onClick={openUpdateConfirmModal}>
-                                      <span>수정</span>
-                                    </button>
-                                  </li>
-                                  <li>
-                                    <button onClick={openDeleteConfirmModal}>
-                                      <span>삭제</span>
-                                    </button>
-                                  </li>
-                                </ul>
-                              )
-                              : (
-                                <ul>
-                                  <li>
-                                    <button onClick={openReportModal}>
-                                      <span>신고</span>
-                                    </button>
-                                  </li>
-                                </ul>
-                              )
-                          }
-                        </SmallModal>
-                      )
-                    }
                   </Text>
                 )
             }
@@ -408,6 +377,40 @@ export default function Comment({ data }: CommentProps) {
           )
         }
       </Wrapper>
+      {
+        moreModal && (
+          <GlobalSelectModal
+            setModal={setMoreModal}
+          >
+            {
+              isOwner
+                ? (
+                  <ul>
+                    <li>
+                      <button onClick={openUpdateConfirmModal}>
+                        <span>수정</span>
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={openDeleteConfirmModal}>
+                        <span>삭제</span>
+                      </button>
+                    </li>
+                  </ul>
+                )
+                : (
+                  <ul>
+                    <li>
+                      <button onClick={openReportModal}>
+                        <span>신고</span>
+                      </button>
+                    </li>
+                  </ul>
+                )
+            }
+          </GlobalSelectModal>
+        )
+      }
       {
         deleteConfirmModal && (
           <GlobalConfirmModal

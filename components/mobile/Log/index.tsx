@@ -26,7 +26,7 @@ import {
   Wrapper
 } from "components/mobile/Log/styles";
 import GlobalConfirmModal from "components/common/GlobalConfirmModal";
-import SmallModal from "components/common/SmallModal";
+import GlobalSelectModal from "components/common/GlobalSelectModal";
 import TextareaAutosize from "react-textarea-autosize";
 import useInput from "hooks/useInput";
 import {$COLOR_MAIN, $COLOR_WHITE} from "styles/variables";
@@ -97,10 +97,12 @@ export default function Log({ data, isOwner }: LogProps) {
   }, [openComment, commentsLimit]);
 
   const openDeleteConfirmModal = useCallback(() => {
+    setMoreModal(false);
     setDeleteConfirmModal(true);
   }, []);
 
   const openUpdateConfirmModal = useCallback(() => {
+    setMoreModal(false);
     setUpdateConfirmModal(true);
   }, []);
 
@@ -121,6 +123,7 @@ export default function Log({ data, isOwner }: LogProps) {
   }, []);
 
   const openReportModal = useCallback(() => {
+    setMoreModal(false);
     setReportModal(true);
   }, []);
 
@@ -406,12 +409,8 @@ export default function Log({ data, isOwner }: LogProps) {
           </button>
           {
             moreModal && (
-              <SmallModal
-                setMoreModal={setMoreModal}
-                styles={{
-                  top: '14px',
-                  right: '48px'
-                }}
+              <GlobalSelectModal
+                setModal={setMoreModal}
               >
                 {
                   isOwner
@@ -439,7 +438,7 @@ export default function Log({ data, isOwner }: LogProps) {
                       </ul>
                     )
                 }
-              </SmallModal>
+              </GlobalSelectModal>
             )
           }
         </MoreButton>

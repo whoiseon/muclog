@@ -387,6 +387,22 @@ const global = (theme: Theme) => css`
   div[data-layout="reply"] {
     padding: 12px 0;
   }
+  
+  div[data-layout="globalSelectModal"] {
+    ul {
+      li {
+        button {
+          background-color: ${theme.mode.background};
+          color: ${theme.mode.text};
+          
+          &:hover {
+            background-color: ${theme.mode.background};
+            color: ${theme.mode.text};
+          }
+        }
+      }
+    }
+  }
 `;
 
 const GlobalStyle = () => {
