@@ -8,7 +8,7 @@ interface LoadingProps {
 }
 
 export default function Loading({ isMobile }: LoadingProps) {
-  const loadingStyle = useCallback((isMobile: boolean) => {
+  const loadingStyle = useCallback(() => {
     if (isMobile) {
       return {
         width: '36%',
@@ -28,7 +28,7 @@ export default function Loading({ isMobile }: LoadingProps) {
         loop
         animationData={lottieJson}
         play
-        style={loadingStyle(isMobile)}
+        style={loadingStyle()}
       />
     </Background>
   );
