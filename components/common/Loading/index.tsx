@@ -4,7 +4,7 @@ import lottieJson from "public/image/lottie/loading.json";
 import {useCallback} from "react";
 
 interface LoadingProps {
-  isMobile: boolean
+  isMobile?: boolean
 }
 
 export default function Loading({ isMobile }: LoadingProps) {
