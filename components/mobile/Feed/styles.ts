@@ -4,7 +4,6 @@ import {$BACKGROUND_COLOR_WHITE, $COLOR_GRAY} from "styles/variables";
 export const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  padding-bottom: 60px;
 `;
 
 export const MyBackground = styled.div`
@@ -93,7 +92,9 @@ export const MyName = styled.div`
   }
 `;
 
-// backgroundUpdateModal main
+export const LogList = styled.div`
+  padding-bottom: 60px;
+`;
 
 export const ColorInputWrapper = styled.div`
   padding: 20px;

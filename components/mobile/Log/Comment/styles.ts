@@ -36,7 +36,6 @@ export const Profile = styled.div`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
   
   & > button {
     background: none;
@@ -93,7 +92,6 @@ export const Info = styled.div`
 export const Text = styled.div`
   position: relative;
   display: flex;
-  justify-content: flex-start;
   cursor: pointer;
 `;
 

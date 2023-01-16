@@ -10,15 +10,15 @@ interface RootProps {
 export default function Root() {
   const router = useRouter();
 
-  const onLogOutClick = async () => {
-    await signOut(auth);
-    await router.push("/");
-  };
+  // const onLogOutClick = async () => {
+  //   await signOut(auth);
+  //   await router.push("/");
+  // };
 
   return (
     <div>
       <div>
-        <button onClick={onLogOutClick}>Log out</button>
+        {/*<button onClick={onLogOutClick}>Log out</button>*/}
       </div>
     </div>
   )

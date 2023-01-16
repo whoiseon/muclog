@@ -24,7 +24,6 @@ export const Profile = styled.div`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
   
   & > button {
     background: none;

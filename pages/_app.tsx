@@ -58,6 +58,8 @@ export default function App({ Component, pageProps }: AppProps) {
                 : (
                   <PCLayout
                     isLoggedIn={isLoggedIn}
+                    isDark={isDark}
+                    setIsDark={setIsDark}
                   >
                     <Component
                       {...pageProps}
@@ -68,7 +70,9 @@ export default function App({ Component, pageProps }: AppProps) {
                     />
                   </PCLayout>
                 )
-              : <Loading />
+              : <Loading
+                isMobile={isMobile}
+              />
           }
         </ThemeProvider>
       </Provider>

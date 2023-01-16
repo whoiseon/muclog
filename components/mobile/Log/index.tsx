@@ -16,7 +16,7 @@ import {
 } from "@firebase/firestore";
 
 import {
-  Attachment, CommentList, CommentMoreButton,
+  Attachment, CommentList,
   Content,
   CreatedAt, EditForm, Info,
   LogInfo, LogTools,
@@ -40,6 +40,7 @@ import {router} from "next/client";
 import {useRouter} from "next/router";
 import GlobalUpdateModal from "components/common/GlobalUpdateModal";
 import {reportData} from "public/data/report";
+import UnLimitContent from "components/common/UnLimitContent";
 
 interface LogProps {
   data: DocumentData,
@@ -508,14 +509,11 @@ export default function Log({ data, isOwner }: LogProps) {
                       }
                       {
                         data.commentCount > commentsLimit && (
-                          <CommentMoreButton>
-                            <button
-                              type="button"
-                              onClick={handleCommentLimitIncrement}
-                            >
-                              <span>더 많은 코멘트를 보고싶어요!</span>
-                            </button>
-                          </CommentMoreButton>
+                          <UnLimitContent
+                            text="더 많은 코멘트들을 확인할래요!"
+                            limit={5}
+                            setLimit={setCommentsLimit}
+                          />
                         )
                       }
                     </>

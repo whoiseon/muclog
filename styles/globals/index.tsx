@@ -162,6 +162,29 @@ const global = (theme: Theme) => css`
       margin-right: 20px;
     }
   }
+
+  button[data-layout="searchButton"] {
+    display: flex;
+    align-items: center;
+    background-color: ${theme.mode.desktopHeaderSearchBackground};
+    color: ${theme.mode.inputColor};
+    font-weight: 500;
+    padding: 20px;
+    cursor: text;
+
+    &:hover {
+      background-color: ${theme.mode.desktopHeaderSearchBackground};
+      color: ${theme.mode.inputColor};
+    }
+
+    span {
+      opacity: 0.5;
+    }
+
+    & > div {
+      margin-right: 20px;
+    }
+  }
   
   button[data-layout="profile-photo-change-button"] {
     border: 4px solid ${theme.mode.mobileMenuHeaderBackground};
@@ -175,6 +198,10 @@ const global = (theme: Theme) => css`
     }
   }
   
+  button[data-layout="unLimitContentMoreButton"] {
+    color: ${theme.mode.text};
+  }
+  
   button {
     border: 0;
     border-radius: ${$BORDER_RADIUS};
@@ -185,7 +212,6 @@ const global = (theme: Theme) => css`
     transition: all .16s ease;
     
     &:hover {
-      color: ${$COLOR_WHITE};
       background-color: ${$COLOR_MAIN_HOVER};
     }
     
@@ -262,6 +288,11 @@ const global = (theme: Theme) => css`
   header[data-layout="global-header"] {
     background-color: ${theme.mode.headerBackground};
     border-bottom: ${theme.mode.headerBorder}
+  }
+
+  header[data-layout="desktop-global-header"] {
+    background-color: ${theme.mode.desktopHeaderBackground};
+    border-bottom: ${theme.mode.desktopHeaderBorder}
   }
   
   div[data-layout="mobile-menu"] {
@@ -402,6 +433,19 @@ const global = (theme: Theme) => css`
         }
       }
     }
+  }
+  
+  div[data-layout="desktopSearchModal"] {
+    background-color: ${theme.mode.desktopHeaderSearchBackground};
+    border-radius: 4px;
+    
+    input {
+      background-color: ${theme.mode.desktopHeaderSearchBackground};
+    }
+  }
+  
+  div[data-layout="desktopProfileModal"] {
+    background-color: ${theme.mode.background};
   }
 `;
 

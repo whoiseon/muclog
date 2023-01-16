@@ -337,7 +337,7 @@ export default function Comment({ data }: CommentProps) {
                   type="button"
                   onClick={handleReplyLimitIncrement}
                 >
-                  <span>더 많은 답글을 보고싶어요!</span>
+                  <span>더 많은 답글을 확인할래요!</span>
                 </button>
               </ReplyMoreButton>
             )

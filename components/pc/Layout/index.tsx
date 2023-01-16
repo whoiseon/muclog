@@ -1,23 +1,25 @@
-import {User} from "@firebase/auth";
+import {Dispatch, SetStateAction} from "react";
+
+import GlobalHeader from "components/pc/Layout/GlobalHeader";
 
 interface LayoutProps {
   children: JSX.Element,
   isLoggedIn: boolean,
+  isDark: boolean,
+  setIsDark: Dispatch<SetStateAction<boolean>>,
 }
 
-export default function Layout({ children, isLoggedIn }: LayoutProps) {
+export default function Layout({ children, isDark, setIsDark, isLoggedIn }: LayoutProps) {
   return isLoggedIn
     ? (
       <>
-        <header>
-          header
-        </header>
+        <GlobalHeader
+          isDark={isDark}
+          setIsDark={setIsDark}
+        />
         <main>
           { children }
         </main>
-        <footer>
-          footer
-        </footer>
       </>
     )
     : children

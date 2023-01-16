@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Image from "next/image";
 
 import {
-  ColorInputWrapper, EmptyLogs,
+  ColorInputWrapper, EmptyLogs, LogList,
   MyBackground,
   MyName,
   MyProfile, NameChangeWrapper,
@@ -33,6 +33,7 @@ import Loading from "components/common/Loading";
 import GlobalUpdateModal from "components/common/GlobalUpdateModal";
 import {updateProfileColor, updateProfileImage, updateUserName} from "store/slices/user/userSlice";
 import {ProfileImageUpdateParams, UserNameUpdateParams} from "store/slices/user/type";
+import UnLimitContent from "components/common/UnLimitContent";
 
 export default function Feed() {
   const router = useRouter();
@@ -82,9 +83,7 @@ export default function Feed() {
 
       setMyLogs(logArray);
     });
-
-    setLoading(false);
-  }, [myLogsLimit, myInfo, router.query.uid]);
+  }, [loading, myLogsLimit, myInfo, router.query.uid]);
 
   useEffect(() => {
     setIsMyFeed(myInfo?.uid === router.query.uid);
@@ -266,35 +265,46 @@ export default function Feed() {
                 </MyName>
               </MyProfile>
               {isMyFeed && <WriteForm />}
-              {
-                loading
-                  ? (
-                    Array.from(Array(5).keys()).map((v, i) => {
-                      return (
-                        <LogSkeleton key={v + i} />
-                      )
-                    })
+              <LogList>
+                {
+                  loading
+                    ? (
+                      Array.from(Array(5).keys()).map((v, i) => {
+                        return (
+                          <LogSkeleton key={v + i} />
+                        )
+                      })
+                    )
+                    : (
+                      myLogs.length > 0
+                        ? (
+                          myLogs.map((log) => {
+                            return <Log
+                              key={log.id}
+                              data={log}
+                              isOwner={log.creatorId === myInfo?.uid}
+                            />
+                          })
+                        )
+                        : (
+                          <EmptyLogs>
+                            <p>
+                              게시글이 존재하지 않습니다!
+                            </p>
+                          </EmptyLogs>
+                        )
+                    )
+                }
+                {
+                  myLogs.length >= myLogsLimit && (
+                    <UnLimitContent
+                      text="더 많은 로그들을 확인할래요!"
+                      limit={20}
+                      setLimit={setMyLogsLimit}
+                    />
                   )
-                  : (
-                    myLogs.length > 0
-                      ? (
-                        myLogs.map((log) => {
-                          return <Log
-                            key={log.id}
-                            data={log}
-                            isOwner={log.creatorId === myInfo?.uid}
-                          />
-                        })
-                      )
-                      : (
-                        <EmptyLogs>
-                          <p>
-                            게시글이 존재하지 않습니다!
-                          </p>
-                        </EmptyLogs>
-                      )
-                  )
-              }
+                }
+              </LogList>
             </Wrapper>
           )
           : <Loading />

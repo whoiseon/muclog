@@ -14,9 +14,8 @@ import Image from "next/image";
 
 import {auth} from "lib/firebase";
 import {
-  createUserWithEmailAndPassword, GithubAuthProvider,
-  GoogleAuthProvider,
-  signInWithEmailAndPassword, signInWithPopup, updateProfile
+  GithubAuthProvider, GoogleAuthProvider,
+  signInWithPopup
 } from "@firebase/auth";
 
 import {SocialIcon, SocialLogin} from "components/pc/Auth/styles";
@@ -28,7 +27,7 @@ import {AppDispatch, RootState} from "store";
 export default function Auth() {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { signUpError, loginError } = useSelector((state: RootState) => state.user);
+  const { signUpError, loginError, loginLoading, signUpLoading } = useSelector((state: RootState) => state.user);
 
   const [newAccount, setNewAccount] = useState(false);
 
@@ -176,11 +175,19 @@ export default function Auth() {
               />
             </InputWrapper>
             {error && <ErrorMessage>{ error }</ErrorMessage>}
-            <button type="submit">
+            <button
+              type="submit"
+              data-button={loginLoading || signUpLoading ? "border" : ""}
+              disabled={loginLoading || signUpLoading}
+            >
               {
                 newAccount
-                  ? "회원가입"
-                  : "로그인"
+                  ? signUpLoading
+                    ? "회원가입 중..."
+                    : "회원가입"
+                  : loginLoading
+                    ? "로그인 중..."
+                    : "로그인"
               }
             </button>
           </form>
