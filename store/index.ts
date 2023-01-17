@@ -12,7 +12,7 @@ const makeStore = () => {
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
       serializableCheck: false,
     }).concat(),
-    devTools: true,
+    devTools: false,
   });
 }
 

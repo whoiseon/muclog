@@ -14,8 +14,9 @@ import Image from "next/image";
 import {signOut, User} from "@firebase/auth";
 import {auth} from "lib/firebase";
 import GlobalConfirmModal from "components/common/GlobalConfirmModal";
-import {useSelector} from "react-redux";
-import {RootState} from "store";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "store";
+import {fetchUserLogout} from "store/slices/user/userSlice";
 
 interface MenusProps {
   setMenuActive: Dispatch<SetStateAction<boolean>>,
@@ -25,6 +26,7 @@ interface MenusProps {
 
 export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
 
   const userInfo = useSelector((state: RootState) => state.user);
 
@@ -48,7 +50,7 @@ export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) 
   }, []);
 
   const handleLogout = useCallback(async () => {
-    await signOut(auth);
+    await dispatch(fetchUserLogout());
     await router.push("/");
     setMenuActive(false);
   }, []);

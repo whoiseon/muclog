@@ -41,10 +41,10 @@ const ModalAnimation = keyframes`
   }
 `
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ isDesktop?: boolean }>`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: ${({ isDesktop }) => isDesktop ? '460px' : '100%'};
   border-radius: 4px;
   animation: ${ModalAnimation} 0.5s ease;
   
@@ -54,8 +54,8 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const Text = styled.div`
-  padding: 20px 20px 30px;
+export const Text = styled.div<{ isDesktop?: boolean }>`
+  padding: ${({ isDesktop }) => isDesktop ? '30px 20px' : '20px 20px 30px'};
 `;
 
 export const Buttons = styled.div`

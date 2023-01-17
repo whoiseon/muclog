@@ -13,7 +13,7 @@ import {doc, getDoc, setDoc, updateDoc} from "@firebase/firestore";
 import {
   createUserWithEmailAndPassword, GithubAuthProvider,
   GoogleAuthProvider,
-  signInWithEmailAndPassword, signInWithPopup,
+  signInWithEmailAndPassword, signInWithPopup, signOut,
   updateProfile, User
 } from "@firebase/auth";
 import {getDownloadURL, ref, uploadString} from "@firebase/storage";
@@ -34,6 +34,9 @@ const initialState: userState = {
   signUpLoading: false,
   signUpSuccess: false,
   signUpError: null,
+  logOutLoading: false,
+  logOutSuccess: false,
+  logOutError: null,
   fetchUserInfoLoading: false,
   fetchUserInfoSuccess: false,
   fetchUserInfoError: null,
@@ -232,6 +235,17 @@ export const fetchUserInfoRequest = createAsyncThunk(
   }
 );
 
+export const fetchUserLogout = createAsyncThunk(
+  "user/FETCH_USER_LOGOUT",
+  async (_, { rejectWithValue }) => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      throw rejectWithValue("유저 정보 요청 실패");
+    }
+  }
+);
+
 export const updateProfileColor = createAsyncThunk(
   "user/UPDATE_PROFILE_COLOR",
   async ({ uid, color }: ProfileColorUpdateParams, { rejectWithValue }) => {
@@ -403,6 +417,27 @@ export const userSlice = createSlice({
         state.displayName = null;
         state.profileColor = null;
         state.type = null;
+      })
+      .addCase(fetchUserLogout.pending, (state) => {
+        state.logOutSuccess = false;
+        state.logOutLoading = true;
+        state.logOutError = null;
+      })
+      .addCase(fetchUserLogout.fulfilled, (state, action) => {
+        state.logOutLoading = false;
+        state.logOutSuccess = true;
+        state.logOutError = null;
+        state.uid = null;
+        state.email = null;
+        state.displayName = null;
+        state.profileColor = null;
+        state.photoURL = null;
+        state.type = null;
+      })
+      .addCase(fetchUserLogout.rejected, (state, action) => {
+        state.logOutLoading = false;
+        state.logOutSuccess = false;
+        state.logOutError = action.payload as string;
       })
       .addCase(updateProfileColor.pending, (state) => {
         state.updateProfileColorSuccess = false;

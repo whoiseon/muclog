@@ -1,6 +1,11 @@
-import {Dispatch, SetStateAction} from "react";
+import {Dispatch, SetStateAction, useEffect} from "react";
 
 import GlobalHeader from "components/pc/Layout/GlobalHeader";
+import {useDispatch} from "react-redux";
+import {AppDispatch} from "store";
+import {auth} from "lib/firebase";
+import {fetchUserInfoRequest} from "store/slices/user/userSlice";
+import {UserRequestParams} from "store/slices/user/type";
 
 interface LayoutProps {
   children: JSX.Element,
@@ -10,6 +15,17 @@ interface LayoutProps {
 }
 
 export default function Layout({ children, isDark, setIsDark, isLoggedIn }: LayoutProps) {
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      dispatch(fetchUserInfoRequest({
+        uid: auth.currentUser.uid,
+        email: auth.currentUser.email
+      } as UserRequestParams))
+    }
+  }, []);
+
   return isLoggedIn
     ? (
       <>

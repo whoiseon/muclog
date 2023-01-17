@@ -311,6 +311,10 @@ const global = (theme: Theme) => css`
   div[data-layout="mobile-menu-profile"] {
     border: 6px solid ${theme.mode.feedProfileBackground};
   }
+
+  div[data-layout="desktop-profile-border"] {
+    border: 4px solid ${theme.mode.feedProfileBackground};
+  }
   
   div[data-layout="mobile-feed-profile"] {
     background-color: ${theme.mode.feedProfileBackground};
@@ -445,7 +449,7 @@ const global = (theme: Theme) => css`
   }
   
   div[data-layout="desktopProfileModal"] {
-    background-color: ${theme.mode.background};
+    background-color: ${theme.mode.desktopProfileModalBackground};
   }
 `;
 

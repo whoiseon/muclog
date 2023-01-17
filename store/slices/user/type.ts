@@ -11,6 +11,9 @@ export interface userState {
   signUpLoading: boolean,
   signUpSuccess: boolean,
   signUpError: string | null
+  logOutLoading: boolean,
+  logOutSuccess: boolean,
+  logOutError: string | null
   fetchUserInfoLoading: boolean,
   fetchUserInfoSuccess: boolean,
   fetchUserInfoError: string | null,
