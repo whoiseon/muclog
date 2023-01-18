@@ -28,12 +28,14 @@ import GlobalUpdateModal from "components/common/GlobalUpdateModal";
 import {ReportWrapper} from "components/mobile/Log/styles";
 import {reportData} from "public/data/report";
 import {$COLOR_MAIN, $COLOR_WHITE} from "styles/variables";
+import SmallModal from "components/pc/SmallModal";
 
 interface ReplyProps {
   data: DocumentData,
+  isDesktop?: boolean
 }
 
-export default function Reply({ data }: ReplyProps) {
+export default function Reply({ data, isDesktop }: ReplyProps) {
   const router = useRouter();
 
   const userInfo = useSelector((state: RootState) => state.user);
@@ -219,6 +221,79 @@ export default function Reply({ data }: ReplyProps) {
                 </Text>
               )
           }
+          {
+            moreModal
+              ? isDesktop
+                ? (
+                  <SmallModal
+                    setMoreModal={setMoreModal}
+                    modalTop={0}
+                    modalLeft={0}
+                    modalBottom={isOwner ? -84: -48}
+                    isLeft={true}
+                  >
+                    {
+                      isOwner
+                        ? (
+                          <ul>
+                            <li>
+                              <button onClick={openUpdateConfirmModal}>
+                                <span>수정</span>
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={openDeleteConfirmModal}>
+                                <span>삭제</span>
+                              </button>
+                            </li>
+                          </ul>
+                        )
+                        : (
+                          <ul>
+                            <li>
+                              <button onClick={openReportModal}>
+                                <span>신고</span>
+                              </button>
+                            </li>
+                          </ul>
+                        )
+                    }
+                  </SmallModal>
+                )
+                : (
+                  <GlobalSelectModal
+                    setModal={setMoreModal}
+                  >
+                    {
+                      isOwner
+                        ? (
+                          <ul>
+                            <li>
+                              <button onClick={openUpdateConfirmModal}>
+                                <span>수정</span>
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={openDeleteConfirmModal}>
+                                <span>삭제</span>
+                              </button>
+                            </li>
+                          </ul>
+                        )
+                        : (
+                          <ul>
+                            <li>
+                              <button onClick={openReportModal}>
+                                <span>신고</span>
+                              </button>
+                            </li>
+                          </ul>
+                        )
+                    }
+                  </GlobalSelectModal>
+                )
+              : null
+          }
         </Content>
         <Image
           src="/image/icon/reply-icon.svg"
@@ -228,40 +303,6 @@ export default function Reply({ data }: ReplyProps) {
         />
       </Wrapper>
       {
-        moreModal && (
-          <GlobalSelectModal
-            setModal={setMoreModal}
-          >
-            {
-              isOwner
-                ? (
-                  <ul>
-                    <li>
-                      <button onClick={openUpdateConfirmModal}>
-                        <span>수정</span>
-                      </button>
-                    </li>
-                    <li>
-                      <button onClick={openDeleteConfirmModal}>
-                        <span>삭제</span>
-                      </button>
-                    </li>
-                  </ul>
-                )
-                : (
-                  <ul>
-                    <li>
-                      <button onClick={openReportModal}>
-                        <span>신고</span>
-                      </button>
-                    </li>
-                  </ul>
-                )
-            }
-          </GlobalSelectModal>
-        )
-      }
-      {
         deleteConfirmModal && (
           <GlobalConfirmModal
             onClick={handleDeleteReply}
@@ -269,6 +310,7 @@ export default function Reply({ data }: ReplyProps) {
             title="답글 삭제"
             text="정말로 답글을 삭제하시겠어요?"
             buttonText="삭제"
+            isDesktop={isDesktop}
           />
         )
       }
@@ -280,6 +322,7 @@ export default function Reply({ data }: ReplyProps) {
             title="수정하기"
             text="정말로 답글을 수정하시겠어요?"
             buttonText="수정"
+            isDesktop={isDesktop}
           />
         )
       }
@@ -290,6 +333,7 @@ export default function Reply({ data }: ReplyProps) {
             setModal={setReportModal}
             title="신고하기"
             buttonText="제출"
+            isDesktop={isDesktop}
           >
             <ReportWrapper>
               <p>

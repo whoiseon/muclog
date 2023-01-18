@@ -18,11 +18,11 @@ const ModalAnimation = keyframes`
 
 export const Background = styled.div`
   position: absolute;
-  top: 56px;
-  right: 24px;
+  top: 60px;
+  right: 20px;
   width: 380px;
   z-index: 100;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   animation: ${ModalAnimation} 0.3s ease-in;
   overflow: hidden;
@@ -63,7 +63,7 @@ export const Profile = styled.div`
 `;
 
 export const MyName = styled.div`
-  margin-top: 18px;
+  margin-top: 24px;
   
   p:nth-of-type(1) {
     font-weight: bold;

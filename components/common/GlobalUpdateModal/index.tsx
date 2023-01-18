@@ -7,9 +7,10 @@ interface GlobalModalProps {
   title: string,
   children: JSX.Element,
   buttonText: string,
+  isDesktop?: boolean,
 }
 
-export default function GlobalUpdateModal({setModal, title, children, buttonText, onClick}: GlobalModalProps) {
+export default function GlobalUpdateModal({setModal, title, children, buttonText, onClick, isDesktop}: GlobalModalProps) {
   const onClickBackground = useCallback((e: MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       setModal(false);
@@ -26,6 +27,7 @@ export default function GlobalUpdateModal({setModal, title, children, buttonText
     >
       <Wrapper
         data-layout="globalConfirmModal"
+        isDesktop={isDesktop}
       >
         <h1>
           { title }

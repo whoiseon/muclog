@@ -6,6 +6,7 @@ import {AppDispatch} from "store";
 import {auth} from "lib/firebase";
 import {fetchUserInfoRequest} from "store/slices/user/userSlice";
 import {UserRequestParams} from "store/slices/user/type";
+import {Main} from "components/pc/Layout/styles";
 
 interface LayoutProps {
   children: JSX.Element,
@@ -33,9 +34,9 @@ export default function Layout({ children, isDark, setIsDark, isLoggedIn }: Layo
           isDark={isDark}
           setIsDark={setIsDark}
         />
-        <main>
+        <Main>
           { children }
-        </main>
+        </Main>
       </>
     )
     : children

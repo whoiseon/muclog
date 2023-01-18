@@ -17,17 +17,20 @@ import moment from "moment";
 
 interface ImageViewModalProps {
   data: DocumentData,
-  setOpenImageView: Dispatch<SetStateAction<boolean>>
+  setOpenImageView: Dispatch<SetStateAction<boolean>>,
+  isDesktop?: boolean
 }
 
-export default function ImageViewModal({ data, setOpenImageView }: ImageViewModalProps) {
+export default function ImageViewModal({ data, setOpenImageView, isDesktop }: ImageViewModalProps) {
   const closeImageViewModal = useCallback(() => {
     setOpenImageView(false);
   }, []);
 
   return (
     <Background>
-      <Header>
+      <Header
+        isDesktop={isDesktop}
+      >
         <button
           type="button"
           onClick={closeImageViewModal}
@@ -40,7 +43,9 @@ export default function ImageViewModal({ data, setOpenImageView }: ImageViewModa
           />
         </button>
       </Header>
-      <Wrapper>
+      <Wrapper
+        isDesktop={isDesktop}
+      >
         <LogInfo>
           <Profile>
             {
@@ -77,7 +82,9 @@ export default function ImageViewModal({ data, setOpenImageView }: ImageViewModa
           </Info>
         </LogInfo>
         <Content dangerouslySetInnerHTML={{ __html: data.content }} />
-        <Attachment>
+        <Attachment
+          isDesktop={isDesktop}
+        >
           <Image
             src={data.attachmentUrl}
             alt={data.attachmentUrl}

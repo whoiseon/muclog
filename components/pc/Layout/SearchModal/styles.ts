@@ -13,8 +13,7 @@ export const Background = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  width: 500px;
-  margin-left: 40px;
+  width: 660px;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
 `;
 

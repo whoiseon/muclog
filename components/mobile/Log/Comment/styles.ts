@@ -34,6 +34,7 @@ export const Profile = styled.div`
 `;
 
 export const Content = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   

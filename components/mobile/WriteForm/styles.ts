@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 
-export const Wrapper = styled.div`
-  margin-bottom: 10px;
+export const Wrapper = styled.div<{ isDesktop?: boolean }>`
+  margin-bottom: ${({ isDesktop }) => isDesktop ? '20px' : '10px'};
+  box-shadow: ${({ isDesktop }) => isDesktop ? '0 1px 3px rgba(0, 0, 0, 0.05)' : null};
 
   button {
     width: 100%;
     height: auto;
-    border-radius: 0;
     line-height: 20px;
     transition: box-shadow 0.16s ease;
     text-align: left;

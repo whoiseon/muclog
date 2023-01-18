@@ -41,8 +41,8 @@ export default function GlobalHeader({ setMenuActive, setSearchActive }: GlobalH
             src="/image/logo/logo.svg"
             alt="Logo"
             priority
-            width={46}
-            height={24}
+            width={44}
+            height={34}
           />
         </Link>
       </Logo>

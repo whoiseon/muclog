@@ -23,9 +23,10 @@ export const Background = styled.div`
   animation: ${ViewAnimation} 0.12s ease-in;
 `;
 
-export const Header = styled.div`
+export const Header = styled.div<{ isDesktop?: boolean }>`
   position: relative;
-  width: 100%;
+  width: ${({ isDesktop }) => isDesktop ? '660px' : '100%'};
+  margin: ${({ isDesktop }) => isDesktop ? '0 auto' : '0'};
   text-align: right;
   
   button {
@@ -39,8 +40,9 @@ export const Header = styled.div`
   }
 `;
 
-export const Wrapper = styled.div`
-  
+export const Wrapper = styled.div<{ isDesktop?: boolean }>`
+  width: ${({ isDesktop }) => isDesktop ? '660px' : '100%'};
+  margin: ${({ isDesktop }) => isDesktop ? '0 auto' : '0'};
 `;
 
 export const LogInfo = styled.div`
@@ -80,10 +82,10 @@ export const Content = styled.div`
   line-height: 24px;
 `;
 
-export const Attachment = styled.div`
+export const Attachment = styled.div<{isDesktop?: boolean}>`
   position: relative;
   width: 100%;
-  height: 400px;
+  height: ${({ isDesktop }) => isDesktop ? '580px' : '440px'};
   
   img {
     width: 100%;

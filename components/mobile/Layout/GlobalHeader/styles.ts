@@ -31,7 +31,7 @@ export const Logo = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  top: 18px;
+  top: 14px;
   z-index: 1;
 `;
 

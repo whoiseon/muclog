@@ -9,11 +9,11 @@ export const Header = styled.header`
   width: 100%;
   height: 60px;
   z-index: 100;
-  padding: 20px;
 `;
 
 export const Logo = styled.div`
   display: flex;
+  padding: 0 18px;
   align-items: center;
   z-index: 1;
 `;
@@ -27,7 +27,7 @@ export const Search = styled.div`
 
   button {
     position: relative;
-    width: 500px;
+    width: 660px;
     padding: 12px 16px;
     cursor: text;
     text-align: left;
@@ -43,6 +43,7 @@ export const Search = styled.div`
 `;
 
 export const Profile = styled.div`
+  padding: 0 18px;
   margin-left: auto;
   z-index: 1;
   

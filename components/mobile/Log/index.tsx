@@ -41,13 +41,15 @@ import {useRouter} from "next/router";
 import GlobalUpdateModal from "components/common/GlobalUpdateModal";
 import {reportData} from "public/data/report";
 import UnLimitContent from "components/common/UnLimitContent";
+import SmallModal from "components/pc/SmallModal";
 
 interface LogProps {
   data: DocumentData,
   isOwner: boolean,
+  isDesktop?: boolean,
 }
 
-export default function Log({ data, isOwner }: LogProps) {
+export default function Log({ data, isOwner, isDesktop }: LogProps) {
   const router = useRouter();
 
   const userInfo = useSelector((state: RootState) => state.user);
@@ -301,9 +303,21 @@ export default function Log({ data, isOwner }: LogProps) {
     }
   }, [EditTextareaRef, editing]);
 
+  useEffect(() => {
+    if ((!isDesktop && moreModal) || deleteConfirmModal || updateConfirmModal || imageDeleteConfirmModal || reportModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isDesktop, moreModal, deleteConfirmModal,
+    updateConfirmModal, imageDeleteConfirmModal ,reportModal]);
+
   return (
     <>
-      <Wrapper data-layout="logs">
+      <Wrapper
+        data-layout="logs"
+        isDesktop={isDesktop}
+      >
         <LogInfo>
           <Profile onClick={handleMoveUserFeed(data.creatorId)}>
             {
@@ -369,17 +383,22 @@ export default function Log({ data, isOwner }: LogProps) {
                 </div>
               </EditForm>
             )
-            : <Content dangerouslySetInnerHTML={{ __html: data.content }} />
+            : <Content
+              dangerouslySetInnerHTML={{ __html: data.content }}
+              isDesktop={isDesktop}
+            />
         }
         {
           data.attachmentUrl && (
             <Attachment>
               <Image
                 src={data.attachmentUrl}
-                alt={data.attachmentUrl}
-                priority
+                alt="log image"
+                // priority={true}
                 fill
                 onClick={openImageViewModal}
+                placeholder="blur"
+                blurDataURL={`/image/logo/logo.svg`}
               />
               {
                 editing && (
@@ -409,38 +428,75 @@ export default function Log({ data, isOwner }: LogProps) {
             />
           </button>
           {
-            moreModal && (
-              <GlobalSelectModal
-                setModal={setMoreModal}
-              >
-                {
-                  isOwner
-                    ? (
-                      <ul>
-                        <li>
-                          <button onClick={openUpdateConfirmModal}>
-                            <span>수정</span>
-                          </button>
-                        </li>
-                        <li>
-                          <button onClick={openDeleteConfirmModal}>
-                            <span>삭제</span>
-                          </button>
-                        </li>
-                      </ul>
-                    )
-                    : (
-                      <ul>
-                        <li>
-                          <button onClick={openReportModal}>
-                            <span>신고</span>
-                          </button>
-                        </li>
-                      </ul>
-                    )
-                }
-              </GlobalSelectModal>
-            )
+            moreModal
+              ? isDesktop
+                ? (
+                  <SmallModal
+                    setMoreModal={setMoreModal}
+                    modalTop={20}
+                    modalLeft={50}
+                  >
+                    {
+                      isOwner
+                        ? (
+                          <ul>
+                            <li>
+                              <button onClick={openUpdateConfirmModal}>
+                                <span>수정</span>
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={openDeleteConfirmModal}>
+                                <span>삭제</span>
+                              </button>
+                            </li>
+                          </ul>
+                        )
+                        : (
+                          <ul>
+                            <li>
+                              <button onClick={openReportModal}>
+                                <span>신고</span>
+                              </button>
+                            </li>
+                          </ul>
+                        )
+                    }
+                  </SmallModal>
+                )
+                : (
+                  <GlobalSelectModal
+                    setModal={setMoreModal}
+                  >
+                    {
+                      isOwner
+                        ? (
+                          <ul>
+                            <li>
+                              <button onClick={openUpdateConfirmModal}>
+                                <span>수정</span>
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={openDeleteConfirmModal}>
+                                <span>삭제</span>
+                              </button>
+                            </li>
+                          </ul>
+                        )
+                        : (
+                          <ul>
+                            <li>
+                              <button onClick={openReportModal}>
+                                <span>신고</span>
+                              </button>
+                            </li>
+                          </ul>
+                        )
+                    }
+                  </GlobalSelectModal>
+                )
+              : null
           }
         </MoreButton>
         <LogTools data-layout="logsTools">
@@ -503,6 +559,7 @@ export default function Log({ data, isOwner }: LogProps) {
                             <Comment
                               key={comment.id}
                               data={comment}
+                              isDesktop={isDesktop}
                             />
                           )
                         })
@@ -560,6 +617,7 @@ export default function Log({ data, isOwner }: LogProps) {
             title="로그 삭제"
             text="정말로 로그를 삭제하시겠어요?"
             buttonText="삭제"
+            isDesktop={isDesktop}
           />
         )
       }
@@ -571,6 +629,7 @@ export default function Log({ data, isOwner }: LogProps) {
             title="수정하기"
             text="정말로 로그를 수정하시겠어요?"
             buttonText="수정"
+            isDesktop={isDesktop}
           />
         )
       }
@@ -582,6 +641,7 @@ export default function Log({ data, isOwner }: LogProps) {
             title="삭제하기"
             text="정말로 사진을 삭제하시겠어요?"
             buttonText="삭제"
+            isDesktop={isDesktop}
           />
         )
       }
@@ -590,6 +650,7 @@ export default function Log({ data, isOwner }: LogProps) {
           <ImageViewModal
             data={data}
             setOpenImageView={setOpenImageView}
+            isDesktop={isDesktop}
           />
         )
       }
@@ -600,6 +661,7 @@ export default function Log({ data, isOwner }: LogProps) {
             setModal={setReportModal}
             title="신고하기"
             buttonText="제출"
+            isDesktop={isDesktop}
           >
             <ReportWrapper>
               <p>

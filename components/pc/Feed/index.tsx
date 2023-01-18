@@ -1,41 +1,28 @@
+import {LogList, MyBackground, MyProfile, ProfileWrapper, UserProfile, Wrapper} from "components/pc/Feed/styles";
 import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
-import Image from "next/image";
-
-import {
-  ColorInputWrapper, EmptyLogs, LogList,
-  MyBackground,
-  MyName,
-  MyProfile, NameChangeWrapper,
-  PhotoChangeWrapper,
-  Profile,
-  Wrapper
-} from "components/mobile/Feed/styles";
 import {AppDispatch, RootState} from "store";
 import {ChangeEvent, useCallback, useEffect, useState} from "react";
-import {
-  collection,
-  doc,
-  DocumentData,
-  getDoc,
-  limit,
-  onSnapshot,
-  orderBy,
-  query,
-  updateDoc,
-  where
-} from "@firebase/firestore";
-import {db, auth} from "lib/firebase";
-import WriteForm from "components/mobile/WriteForm";
-import Log from "components/mobile/Log";
-import LogSkeleton from "components/common/Skeleton/LogSkeleton";
-import Loading from "components/common/Loading";
-import GlobalUpdateModal from "components/common/GlobalUpdateModal";
+import {collection, doc, DocumentData, getDoc, limit, onSnapshot, orderBy, query, where} from "@firebase/firestore";
+import {db} from "lib/firebase";
 import {updateProfileColor, updateProfileImage, updateUserName} from "store/slices/user/userSlice";
 import {ProfileImageUpdateParams, UserNameUpdateParams} from "store/slices/user/type";
+import Loading from "components/common/Loading";
+import Image from "next/image";
+import {
+  ColorInputWrapper,
+  EmptyLogs,
+  MyName,
+  NameChangeWrapper,
+  PhotoChangeWrapper
+} from "components/mobile/Feed/styles";
+import WriteForm from "components/mobile/WriteForm";
+import LogSkeleton from "components/common/Skeleton/LogSkeleton";
+import Log from "components/mobile/Log";
 import UnLimitContent from "components/common/UnLimitContent";
+import GlobalUpdateModal from "components/common/GlobalUpdateModal";
 
-export default function Feed() {
+export default function Profile() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -172,97 +159,107 @@ export default function Feed() {
     setMyName(event.target.value);
   };
 
+  useEffect(() => {
+    if (backgroundUpdateModal || photoUpdateModal || nameUpdateModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [backgroundUpdateModal, photoUpdateModal, nameUpdateModal]);
+
   return (
     <>
       {
         !loading
           ? (
             <Wrapper>
-              <MyBackground
-                style={{
-                  backgroundColor: userInfo?.profileColor
-                }}
-              >
-                {
-                  isMyFeed && (
-                    <button
-                      onClick={openBackgroundUpdateModal}
-                    >
-                      <Image
-                        src="/image/icon/brush-icon.svg"
-                        alt="Photo"
-                        width={20}
-                        height={20}
-                      />
-                    </button>
-                  )
-                }
-              </MyBackground>
-              <MyProfile
-                data-layout="mobile-feed-profile"
-              >
-                <Profile data-layout="mobile-menu-profile">
-                  {
-                    userInfo?.photoURL
-                      ? (
-                        <Image
-                          src={userInfo?.photoURL}
-                          alt="No profile"
-                          priority
-                          width={86}
-                          height={86}
-                        />
-                      )
-                      : (
-                        <Image
-                          src="/image/icon/no-profile-icon.svg"
-                          alt="No profile"
-                          priority
-                          width={86}
-                          height={86}
-                        />
-                      )
-                  }
+              <ProfileWrapper>
+                <MyBackground
+                  style={{
+                    backgroundColor: userInfo?.profileColor
+                  }}
+                >
                   {
                     isMyFeed && (
                       <button
-                        onClick={openPhotoUpdateModal}
-                        data-layout="profile-photo-change-button"
+                        onClick={openBackgroundUpdateModal}
                       >
                         <Image
-                          src="/image/icon/photo-icon.svg"
+                          src="/image/icon/brush-icon.svg"
                           alt="Photo"
-                          width={16}
-                          height={16}
+                          width={20}
+                          height={20}
                         />
                       </button>
                     )
                   }
-                </Profile>
-                <MyName>
-                  <div>
-                    { userInfo?.displayName }
+                </MyBackground>
+                <MyProfile
+                  data-layout="mobile-feed-profile"
+                >
+                  <UserProfile data-layout="mobile-menu-profile">
+                    {
+                      userInfo?.photoURL
+                        ? (
+                          <Image
+                            src={userInfo?.photoURL}
+                            alt="No profile"
+                            priority
+                            width={86}
+                            height={86}
+                          />
+                        )
+                        : (
+                          <Image
+                            src="/image/icon/no-profile-icon.svg"
+                            alt="No profile"
+                            priority
+                            width={86}
+                            height={86}
+                          />
+                        )
+                    }
                     {
                       isMyFeed && (
                         <button
-                          onClick={openNameUpdateModal}
+                          onClick={openPhotoUpdateModal}
+                          data-layout="profile-photo-change-button"
                         >
                           <Image
-                            src="/image/icon/config-icon.svg"
-                            alt="Name change"
+                            src="/image/icon/photo-icon.svg"
+                            alt="Photo"
                             width={14}
                             height={14}
                           />
                         </button>
                       )
                     }
-                  </div>
-                  <div>
-                    { userInfo?.email }
-                  </div>
-                </MyName>
-              </MyProfile>
-              {isMyFeed && <WriteForm />}
+                  </UserProfile>
+                  <MyName>
+                    <div>
+                      { userInfo?.displayName }
+                      {
+                        isMyFeed && (
+                          <button
+                            onClick={openNameUpdateModal}
+                          >
+                            <Image
+                              src="/image/icon/config-icon.svg"
+                              alt="Name change"
+                              width={14}
+                              height={14}
+                            />
+                          </button>
+                        )
+                      }
+                    </div>
+                    <div>
+                      { userInfo?.email }
+                    </div>
+                  </MyName>
+                </MyProfile>
+              </ProfileWrapper>
+              {isMyFeed && <WriteForm isDesktop={true} />}
               <LogList>
                 {
                   loading
@@ -281,6 +278,7 @@ export default function Feed() {
                               key={log.id}
                               data={log}
                               isOwner={log.creatorId === myInfo?.uid}
+                              isDesktop={true}
                             />
                           })
                         )
@@ -314,6 +312,7 @@ export default function Feed() {
             setModal={setBackgroundUpdateModal}
             title="프로필 색상 변경"
             buttonText="변경"
+            isDesktop={true}
           >
             <ColorInputWrapper>
               <p>변경할 색상</p>
@@ -346,6 +345,7 @@ export default function Feed() {
             setModal={setPhotoUpdateModal}
             title="프로필 사진 변경"
             buttonText="변경"
+            isDesktop={true}
           >
             <PhotoChangeWrapper>
               <div>
@@ -385,6 +385,7 @@ export default function Feed() {
             setModal={setNameUpdateModal}
             title="닉네임 변경"
             buttonText="변경"
+            isDesktop={true}
           >
             <NameChangeWrapper>
               <input

@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 import MobileUserFeed from "components/mobile/Feed";
 import MobileAuth from "components/mobile/Auth";
-import PCProfile from "components/pc/Profile";
+import PCUserFeed from "components/pc/Feed";
 import PCAuth from "components/pc/Auth";
 import {useSelector} from "react-redux";
 import {RootState} from "store";
@@ -25,7 +25,7 @@ export default function Uid({ isLoggedIn, isMobile }: HomeProps) {
       }
     } else {
       if (isLoggedIn) {
-        return <PCProfile />
+        return <PCUserFeed />
       } else {
         return <PCAuth />
       }

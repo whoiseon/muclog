@@ -1,10 +1,13 @@
 import styled from "@emotion/styled";
 import {keyframes} from "@emotion/react";
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ isDesktop?: boolean }>`
   position: relative;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: ${({ isDesktop }) => isDesktop ? '20px' : '10px'};
+  border-radius: ${({ isDesktop }) => isDesktop ? '4px' : '0'};
+  box-shadow: ${({ isDesktop }) => isDesktop ? '0 1px 3px rgba(0, 0, 0, 0.05)' : null};
+  overflow: hidden;
 `;
 
 export const LogInfo = styled.div`
@@ -67,8 +70,8 @@ export const Attachment = styled.div`
   }
 `;
 
-export const Content = styled.div`
-  padding: 20px;
+export const Content = styled.div<{ isDesktop?: boolean }>`
+  padding: ${({ isDesktop }) => isDesktop ? '30px 20px 40px' : '20px'};
   line-height: 24px;
 `;
 

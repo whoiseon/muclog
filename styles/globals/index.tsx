@@ -148,6 +148,7 @@ const global = (theme: Theme) => css`
     font-weight: 500;
     padding: 20px;
     cursor: text;
+    border-radius: 0;
     
     &:hover {
       background-color: ${theme.mode.inputBackground};
@@ -158,6 +159,31 @@ const global = (theme: Theme) => css`
       opacity: 0.5;
     }
     
+    & > div {
+      margin-right: 20px;
+    }
+  }
+
+  button[data-layout="desktopWriteButton"] {
+    display: flex;
+    align-items: center;
+    background-color: ${theme.mode.inputBackground};
+    color: ${theme.mode.inputColor};
+    font-weight: 500;
+    padding: 20px;
+    cursor: text;
+    border-radius: 4px;
+    margin-top: 20px;
+
+    &:hover {
+      background-color: ${theme.mode.inputBackground};
+      color: ${theme.mode.inputColor};
+    }
+
+    span {
+      opacity: 0.5;
+    }
+
     & > div {
       margin-right: 20px;
     }
@@ -187,7 +213,7 @@ const global = (theme: Theme) => css`
   }
   
   button[data-layout="profile-photo-change-button"] {
-    border: 4px solid ${theme.mode.mobileMenuHeaderBackground};
+    border: 6px solid ${theme.mode.mobileMenuHeaderBackground};
   }
   
   button[data-layout="replyButton"] {
@@ -313,7 +339,7 @@ const global = (theme: Theme) => css`
   }
 
   div[data-layout="desktop-profile-border"] {
-    border: 4px solid ${theme.mode.feedProfileBackground};
+    border: 6px solid ${theme.mode.feedProfileBackground};
   }
   
   div[data-layout="mobile-feed-profile"] {

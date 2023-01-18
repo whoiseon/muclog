@@ -9,8 +9,13 @@ import {
 } from "components/mobile/WriteForm/styles";
 import WriteModal from "components/mobile/WriteForm/WriteModal";
 import {RootState} from "store";
+import DesktopWriteModal from "components/pc/DesktopWriteModal";
 
-export default function WriteForm() {
+interface WriteFormProps {
+  isDesktop?: boolean
+}
+
+export default function WriteForm({ isDesktop }: WriteFormProps) {
   const router = useRouter();
 
   const userInfo = useSelector((state: RootState) => state.user);
@@ -31,10 +36,12 @@ export default function WriteForm() {
 
   return (
     <>
-      <Wrapper>
+      <Wrapper
+        isDesktop={isDesktop}
+      >
         <button
           onClick={openWriteModal}
-          data-layout="writeButton"
+          data-layout={isDesktop ? "desktopWriteButton" : "writeButton"}
           type="button"
         >
           <div>
@@ -61,12 +68,24 @@ export default function WriteForm() {
           <span>지금 무슨 생각을 하고 계신가요?</span>
         </button>
       </Wrapper>
-      <ModalWrapper writeActive={writeModal}>
-        <WriteModal
-          setWriteModal={setWriteModal}
-          writeModal={writeModal}
-        />
-      </ModalWrapper>
+      {
+        isDesktop
+          ? (
+            writeModal && (
+              <DesktopWriteModal
+                setWriteModal={setWriteModal}
+              />
+            )
+          )
+          : (
+            <ModalWrapper writeActive={writeModal}>
+              <WriteModal
+                setWriteModal={setWriteModal}
+                writeModal={writeModal}
+              />
+            </ModalWrapper>
+          )
+      }
     </>
   )
 }
