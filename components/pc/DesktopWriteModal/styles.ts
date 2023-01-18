@@ -51,6 +51,10 @@ export const Wrapper = styled.div<{ isDesktop?: boolean }>`
   animation: ${ModalAnimation} 0.5s ease;
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
   
   h1 {
     font-size: 14px;
@@ -78,12 +82,17 @@ export const CloseButton = styled.button`
 export const Form = styled.form`
   width: 100%;
   height: 100%;
-  max-height: 540px;
-  overflow-y: scroll;
   cursor: text;
 `;
 
 export const Textarea = styled.div`
+  overflow-y: scroll;
+  max-height: 540px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
   textarea {
     width: 100%;
     padding: 20px;
@@ -91,6 +100,10 @@ export const Textarea = styled.div`
     border-radius: 0;
     font-size: 18px;
     overflow-y: scroll;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 
