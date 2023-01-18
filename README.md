@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Muclog
 
-## Getting Started
+- [데모 확인하기](https://muclog.vercel.app) - Vercel 을 통하여 프로젝트를 Deploy하였습니다.
 
-First, run the development server:
+개발 인원 : 1명 </br>
+개발 기간 : 22년 12월 26일 ~ 23년 01월 18일
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+##Skills.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Front
 
-You can start editing the page by modifying `pages/[uid].tsx`. The page auto-updates as you edit the file.
+- TypeScript
+- React (next.js)
+- redux-toolkit
+- emotion
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+#### Back
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- Firebase Auth
+- Firebase Firestore
+- Firebase Storage
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+##Introduce.
 
-## Learn More
+<b>먹로그(muclog)</b>는 다크모드와 화이트모드를 지원하고 가입한 유저들끼리 소식을 주고 받을 수 있고</br>
+댓글과 좋아요 같은 상호작용을 통하여 커뮤니케이션 할 수 있는 <b>SNS(Social network services)</b>입니다.
 
-To learn more about Next.js, take a look at the following resources:
+해당 프로젝트를 진행하면서 초반에 Firebase와 React redux는 좋은 호환성을 가지진 못한다고 생각하여</br>
+React redux를 사용하지 않고 Component 간 Props를 통하여 상위 컴포넌트로 부터 자식 컴포넌트로 유저 정보를 전달하였습니다.</br>
+하지만 프로젝트가 점점 커지고 Component들이 많아지면서 Redux의 중요성 즉 상태관리의 중요성을 다시 한 번 깨닫고</br>
+어떻게든 Redux를 통하여 유저의 정보를 관리하자! 라고 생각하여 Redux를 도입하고 유저 정보를 Reducer에서 관리하였습니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+위에서 말씀드린 "Firebase와 React redux는 좋은 호환성을 가지진 못한다고 생각하여" 이 말은 정말.. </br>
+저의 실력이 부족해서 나온 말이던구요 역시 공부하고 많은 구글링을 통해 Clean 하진 않다고 생각하지만 </br>
+그래도 정상적으로 동작하는데 성공하였습니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+꼭 한 번 만들어보고 싶었던 SNS Project를 포트폴리오로 보여드릴 수 있어서 정말 기쁩니다. 해당 프로젝트는 여기서 끝이 아니라 </br>
+Clean한 코드를 공부하면서 계속 리팩토링을 할 생각입니다!
