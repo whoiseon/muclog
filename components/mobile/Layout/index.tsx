@@ -9,6 +9,7 @@ import {auth} from "lib/firebase";
 import {fetchUserInfoRequest} from "store/slices/user/userSlice";
 import {UserRequestParams} from "store/slices/user/type";
 import Search from "components/mobile/Layout/Search";
+import useLocalStorage from "hooks/useLocalStorage";
 
 interface LayoutProps {
   children: JSX.Element,

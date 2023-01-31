@@ -17,6 +17,7 @@ import GlobalConfirmModal from "components/common/GlobalConfirmModal";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "store";
 import {fetchUserLogout} from "store/slices/user/userSlice";
+import useLocalStorage from "hooks/useLocalStorage";
 
 interface MenusProps {
   setMenuActive: Dispatch<SetStateAction<boolean>>,
@@ -31,6 +32,8 @@ export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) 
   const userInfo = useSelector((state: RootState) => state.user);
 
   const [logoutConfirmModal, setLogoutConfirmModal] = useState(false);
+
+  const [darkThemeStorage, setDarkThemeStorage] = useLocalStorage("darkTheme", true);
 
   const onClickMovePage = useCallback(() => {
     setMenuActive(false);
@@ -57,7 +60,8 @@ export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) 
 
   const handleDarkModeToggle = useCallback(() => {
     setIsDark((prev) => !prev);
-  }, []);
+    setDarkThemeStorage((prev) => !prev);
+  }, [darkThemeStorage]);
 
   return (
     <Wrapper>
@@ -160,7 +164,7 @@ export default function Menus({ setMenuActive, isDark, setIsDark }: MenusProps) 
       <DarkModeToggle>
         <button onClick={handleDarkModeToggle}>
           {
-            isDark
+            darkThemeStorage
               ? (
                 <Image
                   src="/image/icon/dark/light-mode-icon.svg"

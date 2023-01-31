@@ -1,17 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "store/slices/user/userSlice";
 import logger from "redux-logger";
-import logSlice from "store/slices/log/logSlice";
+import themeSlice from "store/slices/theme/themeSlice";
 
 const makeStore = () => {
   return configureStore({
     reducer: {
       user: userSlice.reducer,
-      log: logSlice.reducer
+      theme: themeSlice.reducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(),
+    }).concat(logger),
     devTools: false,
   });
 }

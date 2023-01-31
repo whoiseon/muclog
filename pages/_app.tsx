@@ -2,7 +2,7 @@
 import type { AppProps } from 'next/app';
 import GlobalStyle from "styles/globals";
 import {ThemeProvider} from "@emotion/react";
-import {useEffect, useState} from "react";
+import {useEffect, useLayoutEffect, useState} from "react";
 import {darkTheme, lightTheme} from "styles/theme";
 import {Provider, useSelector} from "react-redux";
 import store, {RootState} from "store";
@@ -14,6 +14,7 @@ import {auth} from "lib/firebase";
 import Loading from "components/common/Loading";
 import MobileLayout from "components/mobile/Layout";
 import PCLayout from "components/pc/Layout";
+import useLocalStorage from "hooks/useLocalStorage";
 
 export default function App({ Component, pageProps }: AppProps) {
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -21,6 +22,8 @@ export default function App({ Component, pageProps }: AppProps) {
   const [isDark, setIsDark] = useState(true);
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [darkThemeStorage, setDarkThemeStorage] = useLocalStorage("darkTheme", true);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -31,6 +34,10 @@ export default function App({ Component, pageProps }: AppProps) {
       }
       setInit(true);
     });
+  }, []);
+
+  useEffect(() => {
+    setIsDark(darkThemeStorage);
   }, []);
 
   return (
@@ -72,7 +79,7 @@ export default function App({ Component, pageProps }: AppProps) {
                   </PCLayout>
                 )
               : <Loading
-                isMobile={isMobile}
+                isDark={isDark}
               />
           }
         </ThemeProvider>

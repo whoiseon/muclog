@@ -7,6 +7,7 @@ import {Header, Logo, Profile, Search} from "components/pc/Layout/GlobalHeader/s
 import {ChangeEvent, Dispatch, SetStateAction, useCallback, useState} from "react";
 import SearchModal from "components/pc/Layout/SearchModal";
 import ProfileModal from "components/pc/Layout/ProfileModal";
+import useLocalStorage from "hooks/useLocalStorage";
 
 interface GlobalHeaderProps {
   isDark: boolean,
@@ -21,13 +22,16 @@ export default function GlobalHeader({ isDark, setIsDark }: GlobalHeaderProps) {
 
   const [profileModal, setProfileModal] = useState(false);
 
+  const [darkThemeStorage, setDarkThemeStorage] = useLocalStorage("darkTheme", true);
+
   const openProfileModal = useCallback(() => {
     setProfileModal(true);
   }, []);
 
   const handleDarkModeToggle = useCallback(() => {
     setIsDark((prev) => !prev);
-  }, []);
+    setDarkThemeStorage((prev) => !prev);
+  }, [darkThemeStorage]);
 
   const handleSearchToggle = useCallback(() => {
     setIsSearch((prev) => !prev);
@@ -70,7 +74,7 @@ export default function GlobalHeader({ isDark, setIsDark }: GlobalHeaderProps) {
         <Profile>
           <button onClick={handleDarkModeToggle}>
             {
-              isDark
+              darkThemeStorage
                 ? (
                   <Image
                     src="/image/icon/dark/light-mode-icon.svg"
